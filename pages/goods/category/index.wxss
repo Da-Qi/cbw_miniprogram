@@ -25,4 +25,67 @@
 page {
   min-height: none;
   padding-bottom: 0;
+  background: #f5f5f5 !important;
 }
+
+.article-card {
+    position: relative;
+    height: 80px;
+    width: 90%;
+    background-color: white;
+    padding: 0 12px;
+    margin: 4px 6px;
+    display: flex;
+    justify-content: space-between; /* 水平两端对齐 */
+    align-items: center;        /* 垂直居中 */
+}
+.fixed-top-left{
+  position: absolute;
+  top: 0;
+  left: 0.5px;
+  font-size: 8px;
+  width: 200rpx;   /* 宽度自定义 */
+  height: 100rpx;  /* 高度自定义 */
+  z-index: 999;    /* 保证浮在最上层 */
+  color: #666666;
+}
+
+.left-article{
+    display: flex;
+    align-items: center;        /* 垂直居中 */
+    margin-left: px;
+}
+.left-article .title{
+    font-size: 14px;
+    font-weight: bold;
+    margin-left: 9px;
+}
+.cover-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+.article-info {
+    width: 46px;
+    height: 21px;
+    display: flex;
+    justify-content: center;  /* 水平居中 */
+    align-items: center;      /* 垂直居中 */
+    border-style: solid;      /* 必须指定边框样式 */
+    border-width: 1rpx;       /* 边框宽度 */
+    border-color: green;    /* 边框颜色（红色） */
+}
+
+.article-info .desc{
+    font-size: 13px;
+    color: green;
+}
+.official-account-wrapper {
+    height: 100px;
+    width: 200px;
+    margin: 20rpx;
+    padding: 10rpx;
+    background-color: #f8f8f8;
+    border-radius: 12rpx;
+  }

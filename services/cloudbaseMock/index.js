@@ -162,10 +162,8 @@ export const SKU = [
 
 export const HOME_SWIPER = [
   {
-    images: ['cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/header.png',
-    'cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/aaa.png',
-    'cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/bbb.png',
-    'cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/ccc.png'],
+    images: ['cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/header_1.png',
+    'cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/header_2.png'],
     _id: 'A3QFLT6UVN',
   },
 ];

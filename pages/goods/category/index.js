@@ -31,6 +31,12 @@ Page({
       });
     }
   },
+  onOpenArticle() {
+    console.log("click onOpenArticle");
+    wx.navigateTo({
+    url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/rDpYWi48mxzHjQfjQ3QMLw')
+    })
+  },
   onReachBottom() {
     if (this.data.goodsListLoadStatus === LIST_LOADING_STATUS.READY) {
       this.loadGoodsList();

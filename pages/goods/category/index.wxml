@@ -1,4 +1,13 @@
-<cloud-template-guide />
+<view class="article-card">
+  <text class="fixed-top-left">宠伴玩旅行社的公众号</text>
+  <view class="left-article">
+    <image src="cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/icon.png" class="cover-image" />
+    <text class="title">宠伴玩旅行社</text>
+  </view>
+  <view class="article-info" bind:tap="onOpenArticle">
+    <text class="desc">关注</text>
+  </view>
+</view>
 <view class="goods-category-class">
   <goods-list wr-class="goods-list-container" goodsList="{{goodsList}}" bind:click="goodListClickHandle" bind:addcart="goodListAddCartHandle" />
   <load-more list-is-empty="{{!goodsList.length}}" status="{{goodsListLoadStatus}}" bind:retry="onReTry" />
