@@ -276,5 +276,9 @@ Page({
                 }
             }
         })
+    },
+
+    addRoute() {
+        wx.navigateTo({ url: '/pages/routeEditor/routeEditor' })
     }
 });

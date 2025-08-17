@@ -31,7 +31,8 @@
     "pages/order/invoice/index",
     "pages/usercenter/name-edit/index",
     "pages/webview/webview",
-    "pages/testpage/testpage"
+    "pages/testpage/testpage",
+    "pages/routeEditor/routeEditor"
   ],
   "tabBar": {
     "custom": true,

@@ -1,0 +1,44 @@
+<view class="container">
+  <!-- 标题 -->
+  <view class="form-item">
+    <text>路线标题：</text>
+    <input placeholder="请输入标题" bindinput="onTitleChange" value="{{route.title}}" />
+  </view>
+
+  <!-- 轮播图 -->
+  <view class="form-item">
+    <text>轮播图：</text>
+    <swiper indicator-dots="{{true}}" autoplay="{{true}}" interval="3000" duration="500" class="swiper">
+      <block wx:for="{{route.carousel}}" wx:key="index">
+        <swiper-item>
+          <image src="{{item}}" mode="scaleToFill" class="swiper-image" />
+        </swiper-item>
+      </block>
+    </swiper>
+    <button bindtap="addCarouselImage">添加图片</button>
+  </view>
+
+  <!-- 描述详情图 -->
+  <view class="form-item">
+    <text>描述详情图：</text>
+    <block wx:for="{{route.detailImages}}" wx:key="index">
+      <image src="{{item}}" mode="scaleToFill" class="detail-image" />
+    </block>
+    <button bindtap="addDetailImage">添加详情图</button>
+  </view>
+
+  <!-- 是否可用 -->
+  <view class="form-item">
+    <text>是否可用：</text>
+    <switch checked="{{route.active}}" bindchange="onActiveChange" />
+  </view>
+
+  <!-- 展示优先级 -->
+  <view class="form-item">
+    <text>展示优先级：(数字越大越靠前)</text>
+    <input type="number" placeholder="数字越大越靠前" bindinput="onPriorityChange" value="{{route.priority}}" />
+  </view>
+
+  <!-- 保存按钮 -->
+  <button bindtap="saveRoute">保存路线</button>
+</view>

@@ -149,12 +149,19 @@ page {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
   }
   
   .logout-btn {
     background-color: #ff4d4f;
     color: #fff;
+    border-radius: 8rpx;
+    padding: 20rpx;
+    width: 300rpx;
+  }
+
+  .add-route-btn {
+    background-color: rgb(55, 130, 160);
+    color: rgb(56, 190, 22);
     border-radius: 8rpx;
     padding: 20rpx;
     width: 300rpx;

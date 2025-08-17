@@ -1,0 +1,25 @@
+.container {
+    padding: 20px;
+}
+
+.form-item {
+    margin-bottom: 20px;
+}
+
+.swiper {
+    width: 100%;
+    height:38vh;
+    /* 固定高度 */
+}
+
+.swiper-image {
+    margin-bottom: 5px;
+    width: 100%;
+    height: 38vh;
+}
+
+.detail-image {
+    width: 100%;
+    height: 73vh;
+    margin-top: 10px;
+}

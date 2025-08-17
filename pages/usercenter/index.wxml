@@ -27,4 +27,8 @@
 <view class="container">
   <button class="logout-btn" bindtap="onLogout">退出登录</button>
 </view>
+<!-- Todo if关联isAdmin -->
+<block class="container" wx:if="{{true}}">
+    <button class="add-route-btn" bindtap="addRoute">新增路线</button>
+</block>
 <t-toast id="t-toast" />
