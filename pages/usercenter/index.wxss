@@ -144,3 +144,18 @@ page {
 .cell-box .t-cell-padding {
   padding: 24rpx 18rpx 24rpx 32rpx;
 }
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .logout-btn {
+    background-color: #ff4d4f;
+    color: #fff;
+    border-radius: 8rpx;
+    padding: 20rpx;
+    width: 300rpx;
+  }

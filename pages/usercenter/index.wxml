@@ -24,4 +24,7 @@
     <view class="popup-close" bind:tap="closeMakePhone">取消</view>
   </view>
 </t-popup>
+<view class="container">
+  <button class="logout-btn" bindtap="onLogout">退出登录</button>
+</view>
 <t-toast id="t-toast" />

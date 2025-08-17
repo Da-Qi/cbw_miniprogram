@@ -5,7 +5,7 @@ export function createId() {
     .map(() => Math.floor(Math.random() * 16).toString(16))
     .join('');
 }
-
+// 单一商品
 export const SPU = [
   {
     owner: '1856254275343773698',
@@ -72,7 +72,7 @@ export const SPU = [
     status: 'ENABLED',
   },
 ];
-
+// 某一个路线对应的具体配置
 export const SKU = [
   {
     owner: '1856254275343773698',
@@ -80,10 +80,10 @@ export const SKU = [
     createdAt: 1731488370290,
     createBy: '1856254275343773698',
     updateBy: '1856254275343773698',
-    price: 190,
+    price: 200,
     _openid: '1856254275343773698',
     count: 100,
-    description: '2 个太空鹅',
+    description: '1人1狗',
     spu: { _id: 'P4_prod' },
     _id: 'K6_prod',
     updatedAt: 1731488370290,
@@ -94,10 +94,24 @@ export const SKU = [
     createdAt: 1731488370145,
     createBy: '1856254275343773698',
     updateBy: '1856254275343773698',
+    price: 150,
+    _openid: '1856254275343773698',
+    count: 100,
+    description: '1人大巴',
+    spu: { _id: 'P4_prod' },
+    _id: 'K5_prod',
+    updatedAt: 1731488370145,
+  },
+  {
+    owner: '1856254275343773698',
+    image: 'https://qcloudimg.tencent-cloud.cn/raw/063123361b3a397f4ba6894591c3a006.png',
+    createdAt: 1731488370145,
+    createBy: '1856254275343773698',
+    updateBy: '1856254275343773698',
     price: 100,
     _openid: '1856254275343773698',
     count: 100,
-    description: '1 个太空鹅',
+    description: '1人自驾',
     spu: { _id: 'P4_prod' },
     _id: 'K5_prod',
     updatedAt: 1731488370145,

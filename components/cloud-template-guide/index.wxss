@@ -18,6 +18,8 @@
 .cloud-template-guide .right {
   align-items: center;
   color: #0052d9;
+  font-size: small;
+  width: 55px;
 }
 
 .cloud-template-guide-dialog {

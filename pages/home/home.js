@@ -1,60 +1,85 @@
 /* eslint-disable no-param-reassign */
-import { getHomeSwiper } from '../../services/home/home';
-import { getCloudImageTempUrl } from '../../utils/cloudImageHandler';
+import {
+    getHomeSwiper
+} from '../../services/home/home';
+import {
+    getCloudImageTempUrl
+} from '../../utils/cloudImageHandler';
 
 
 Page({
-  data: {
-    imgSrcs: [],
-    tabList: [],
-    pageLoading: false,
-    current: 1,
-    autoplay: true,
-    duration: '500',
-    interval: 5000,
-    navigation: { type: 'dots' },
-    swiperImageProps: { mode: 'scaleToFill' }
-  },
+    data: {
+        imgSrcs: [],
+        tabList: [],
+        pageLoading: false,
+        current: 1,
+        autoplay: true,
+        duration: '500',
+        interval: 5000,
+        navigation: {
+            type: 'dots'
+        },
+        swiperImageProps: {
+            mode: 'scaleToFill'
+        },
+        userInfo: {}
+    },
 
-  privateData: {
-    tabIndex: 0,
-  },
+    goTest() {
+        wx.navigateTo({
+            url: '/pages/testpage/testpage'
+        })
+    },
 
-  onShow() {
-    this.getTabBar().init();
-  },
+    privateData: {
+        tabIndex: 0,
+    },
 
-  onLoad() {
-    this.init();
-  },
-  onPullDownRefresh() {
-    this.init();
-  },
+    onShow() {
+        this.getTabBar().init();
+    },
 
-  async init() {
-    wx.stopPullDownRefresh();
+    onLoad() {
+        this.init();
+    },
+    onPullDownRefresh() {
+        this.init();
+    },
 
-    this.setData({
-      pageLoading: false,
-    });
-    this.loadHomeSwiper();
-  },
+    async init() {
+        wx.stopPullDownRefresh();
 
-  async loadHomeSwiper() {
-    const { images } = await getHomeSwiper();
-    const handledImages = await getCloudImageTempUrl(images);
+        this.setData({
+            pageLoading: false,
+        });
+        this.loadHomeSwiper();
+    },
 
-    this.setData({ imgSrcs: handledImages });
-  },
+    async loadHomeSwiper() {
+        const {
+            images
+        } = await getHomeSwiper();
+        const handledImages = await getCloudImageTempUrl(images);
 
-  navToSearchPage() {
-    wx.navigateTo({ url: '/pages/goods/search/index' });
-  },
+        this.setData({
+            imgSrcs: handledImages
+        });
+    },
 
-  navToActivityDetail({ detail }) {
-    const { index: promotionID = 0 } = detail || {};
-    wx.navigateTo({
-      url: `/pages/promotion-detail/index?promotion_id=${promotionID}`,
-    });
-  }
+    navToSearchPage() {
+        wx.navigateTo({
+            url: '/pages/goods/search/index'
+        });
+    },
+
+    navToActivityDetail({
+        detail
+    }) {
+        const {
+            index: promotionID = 0
+        } = detail || {};
+        wx.navigateTo({
+            url: `/pages/promotion-detail/index?promotion_id=${promotionID}`,
+        });
+    }
 });
