@@ -39,6 +39,57 @@
     <input type="number" placeholder="数字越大越靠前" bindinput="onPriorityChange" value="{{route.priority}}" />
   </view>
 
+  <view class="page-title">服务表</view>
+  <!-- 服务列表 -->
+  <view class="service-list">
+    <!-- 服务项标题栏 -->
+    <view class="service-header">
+      <view class="service-name">服务名称</view>
+      <view class="service-price">售价</view>
+      <view class="service-action">操作</view>
+    </view>
+    
+    <!-- 服务项列表 -->
+    <block wx:for="{{services}}" wx:key="index">
+      <view class="service-item" animation="{{item.animationData}}">
+        <view class="service-name">
+          <input 
+            type="text" 
+            value="{{item.service_name}}" 
+            bindinput="onServiceNameChange" 
+            data-index="{{index}}"
+            placeholder="请输入服务名称"
+          />
+        </view>
+        <view class="service-price">
+          <input 
+            type="number" 
+            value="{{item.price}}" 
+            bindinput="onServicePriceChange" 
+            data-index="{{index}}"
+            placeholder="0.00"
+          />
+        </view>
+        <view class="service-action">
+          <button 
+            class="delete-btn" 
+            bindtap="deleteService" 
+            data-index="{{index}}"
+            wx:if="{{services.length > 1}}"
+          >
+            <icon type="clear" size="18" color="#ff4d4f" />
+          </button>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 新增服务按钮 -->
+    <button class="add-service-btn" bindtap="addService">
+      <icon type="plus" size="20" color="#1677ff" />
+      <text>新增服务</text>
+    </button>
+  </view>
+
   <!-- 保存按钮 -->
   <button bindtap="saveRoute">保存路线</button>
 </view>

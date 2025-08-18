@@ -23,3 +23,106 @@
     height: 73vh;
     margin-top: 10px;
 }
+
+/* 页面标题样式 */
+.page-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #333;
+    margin: 30rpx 0;
+    text-align: center;
+  }
+  
+  /* 服务列表容器 */
+  .service-list {
+    background-color: #fff;
+    border-radius: 16rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  
+  /* 服务项标题栏样式 */
+  .service-header {
+    display: flex;
+    padding: 24rpx 30rpx;
+    background-color: #fafafa;
+    border-bottom: 1rpx solid #eee;
+  }
+  
+  /* 服务名称列样式 */
+  .service-name {
+    flex: 2;
+    font-size: 28rpx;
+    color: #666;
+  }
+  
+  /* 服务价格列样式 */
+  .service-price {
+    flex: 1;
+    font-size: 28rpx;
+    color: #666;
+    text-align: center;
+  }
+  
+  /* 服务操作列样式 */
+  .service-action {
+    flex: 1;
+    font-size: 28rpx;
+    color: #666;
+    text-align: center;
+  }
+  
+  /* 服务项样式 */
+  .service-item {
+    display: flex;
+    align-items: center;
+    padding: 24rpx 30rpx;
+    border-bottom: 1rpx solid #eee;
+    transition: all 0.3s ease;
+  }
+  
+  /* 输入框样式 */
+  .service-item input {
+    width: 100%;
+    padding: 10rpx 0;
+    font-size: 28rpx;
+    color: #333;
+  }
+  
+  .service-item .service-price input {
+    text-align: center;
+  }
+  
+  /* 删除按钮样式 */
+  .delete-btn {
+    padding: 0;
+    background: transparent;
+    border: none;
+    width: 50rpx;
+    height: 50rpx;
+    line-height: 50rpx;
+    margin: 0 auto;
+  }
+  
+  /* 新增服务按钮样式 */
+  .add-service-btn {
+    width: 100%;
+    margin-top: 30rpx;
+    padding: 20rpx 0;
+    background-color: #e8f3ff;
+    color: #1677ff;
+    border-radius: 10rpx;
+    font-size: 28rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+  }
+  
+  .add-service-btn icon {
+    margin-right: 10rpx;
+  }
+  
+  .add-service-btn::after {
+    border: none;
+  }
