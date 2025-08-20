@@ -24,7 +24,7 @@
 
 page {
   min-height: none;
-  padding-bottom: 0;
+  padding-bottom: calc(50rpx + env(safe-area-inset-bottom));
   background: #f5f5f5 !important;
 }
 

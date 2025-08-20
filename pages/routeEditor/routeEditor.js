@@ -2,7 +2,8 @@ import {
     uploadMultiImages
 } from '../../services/_utils/images';
 import {
-    createRoute, createRouteServices
+    createRoute,
+    createRouteServices
 } from '../../services/route/route';
 Page({
     /**
@@ -214,37 +215,56 @@ Page({
         // 可以在这里上传到数据库或保存到本地存储
         // 1. 上传轮播图片、详情图
         wx.showLoading({
-            title: '上传中...'
+            title: '上传中...',
+            mask: true // 可选，防止用户点击
         });
-        const carouselFileIDs = await uploadMultiImages('route_carousel', routeData.carousel)
-        const detailImagesFileIDs = await uploadMultiImages('route_detail', routeData.detailImages)
-        console.log('上传成功，carouselFileIDs列表:', carouselFileIDs);
-        console.log('上传成功，detailImagesFileIDs列表:', detailImagesFileIDs);
 
-        // 2. 写入数据库
-        const createRouteData = await createRoute({
-            name: routeData.title,
-            priority: routeData.priority,
-            swiper_images: carouselFileIDs,
-            detail: detailImagesFileIDs,
-            status: routeData.active
-        })
-        console.log('createRouteData ' + createRouteData.data.id)
+        try {
+            const carouselFileIDs = await uploadMultiImages('route_carousel', routeData.carousel)
+            const detailImagesFileIDs = await uploadMultiImages('route_detail', routeData.detailImages)
+            console.log('上传成功，carouselFileIDs列表:', carouselFileIDs);
+            console.log('上传成功，detailImagesFileIDs列表:', detailImagesFileIDs);
 
-        // 2. 写入路线具体服务数据库
-        const routeServicesData = this.data.services
-        routeServicesData.forEach((routeService, index) => {
-            routeService.route_id = {_id : createRouteData.data.id}
-        })
+            // 2. 写入数据库
+            const createRouteData = await createRoute({
+                name: routeData.title,
+                priority: routeData.priority,
+                swiper_images: carouselFileIDs,
+                detail: detailImagesFileIDs,
+                status: routeData.active
+            })
+            console.log('createRouteData ' + createRouteData.data.id)
 
-        const createRouteServicesData = await createRouteServices({
-            serviceArray: routeServicesData
-        })
+            // 2. 写入路线具体服务数据库
+            const routeServicesData = this.data.services
+            routeServicesData.forEach((routeService, index) => {
+                routeService.route_id = {
+                    _id: createRouteData.data.id
+                }
+            })
 
-        wx.showToast({
-            title: '保存成功',
-            icon: 'success'
-        })
+            await createRouteServices({
+                serviceArray: routeServicesData
+            })
+            wx.showToast({
+                title: '提交成功',
+                icon: 'success'
+            });
+            // 延时跳转，保证用户能看到 toast
+            getApp().globalData.needRefreshRoute = true
+            setTimeout(() => {
+                wx.switchTab({
+                    url: '/pages/goods/category/index'
+                });
+            }, 1000);
+        } catch (e) {
+            wx.showToast({
+                title: '提交失败',
+                icon: 'none'
+            });
+        } finally {
+            wx.hideLoading();
+        }
     },
 
 

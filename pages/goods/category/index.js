@@ -1,108 +1,118 @@
 import Toast from 'tdesign-miniprogram/toast/index';
-import { getCates } from '../../../services/cate/cate';
-import { listGood, getPrice } from '../../../services/good/spu';
-import { LIST_LOADING_STATUS } from '../../../utils/listLoading';
-import { getCloudImageTempUrl } from '../../../utils/cloudImageHandler';
+import {
+    LIST_LOADING_STATUS
+} from '../../../utils/listLoading';
+import {
+    getCloudImageTempUrl
+} from '../../../utils/cloudImageHandler';
+import {
+    listRoutes,
+    getPrice
+} from '../../../services/route/route';
 
 Page({
-  data: {
-    cates: [],
-    goodsList: [],
-    goodsListLoadStatus: LIST_LOADING_STATUS.READY,
-  },
+    data: {
+        routeList: [],
+        routeListLoadStatus: LIST_LOADING_STATUS.READY,
+    },
 
-  goodListPagination: {
-    index: 1,
-    num: 20,
-  },
-  async init() {
-    try {
-      const cates = await getCates();
-      this.setData({ cates });
-      this.loadGoodsList();
-    } catch (e) {
-      console.error('获取商品分类列表失败', e);
-      Toast({
-        context: this,
-        selector: '#t-toast',
-        message: '获取商品分类列表失败',
-        duration: 1000,
-        icon: '',
-      });
-    }
-  },
-  onOpenArticle() {
-    console.log("click onOpenArticle");
-    wx.navigateTo({
-    url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/rDpYWi48mxzHjQfjQ3QMLw')
-    })
-  },
-  onReachBottom() {
-    if (this.data.goodsListLoadStatus === LIST_LOADING_STATUS.READY) {
-      this.loadGoodsList();
-    }
-  },
+    routeListPagination: {
+        index: 1,
+        num: 3,
+    },
+    async init() {
+        this.loadRouteList();
+    },
+    onOpenArticle() {
+        console.log("click onOpenArticle");
+        wx.navigateTo({
+            url: '/pages/webview/webview?url=' + encodeURIComponent('https://mp.weixin.qq.com/s/rDpYWi48mxzHjQfjQ3QMLw')
+        })
+    },
+    onReachBottom() {
+        if (this.data.routeListLoadStatus === LIST_LOADING_STATUS.READY) {
+            this.loadRouteList();
+        }
+    },
+    onPullDownRefresh() {
+        console.log('触发了下拉刷新')
+        // 调用接口加载最新数据
+        this.loadRouteList(true);
+        wx.stopPullDownRefresh();
+    },
+    onShow() {
+        this.getTabBar().init();
+        if (getApp().globalData.needRefreshRoute) {
+            this.loadRouteList(true) // 重新拉取数据
+            getApp().globalData.needRefreshRoute = false
+        }
+    },
+    onChange(e) {
+        const cateId = e?.detail?.item?._id;
+        wx.navigateTo({
+            url: `/pages/goods/list/index?cateId=${cateId}`,
+        });
+    },
+    onLoad(options) {
+        this.init();
+    },
+    routeListClickHandle(e) {
+        const spuId = e?.detail?.goods?._id;
+        if (typeof spuId !== 'string') return;
+        wx.navigateTo({
+            url: `/pages/goods/details/index?spuId=${spuId}`,
+        });
+    },
+    routeListAddCartHandle(e) {
+        const spuId = e?.detail?.goods?._id;
+        if (typeof spuId !== 'string') return;
+        wx.navigateTo({
+            url: `/pages/goods/details/index?spuId=${spuId}`,
+        });
+    },
+    onReTry() {
+        this.loadRouteList();
+    },
+    async loadRouteList(fresh = false) {
+        if (fresh) {
+            wx.pageScrollTo({
+                scrollTop: 0,
+            });
+        }
+        this.setData({
+            routeListLoadStatus: LIST_LOADING_STATUS.LOADING
+        });
+        const pageSize = this.routeListPagination.num;
+        const pageIndex = fresh ? 1 : this.routeListPagination.index;
 
-  onShow() {
-    this.getTabBar().init();
-  },
-  onChange(e) {
-    const cateId = e?.detail?.item?._id;
-    wx.navigateTo({
-      url: `/pages/goods/list/index?cateId=${cateId}`,
-    });
-  },
-  onLoad() {
-    this.init();
-  },
-  goodListClickHandle(e) {
-    const spuId = e?.detail?.goods?._id;
-    if (typeof spuId !== 'string') return;
-    wx.navigateTo({
-      url: `/pages/goods/details/index?spuId=${spuId}`,
-    });
-  },
-  goodListAddCartHandle(e) {
-    const spuId = e?.detail?.goods?._id;
-    if (typeof spuId !== 'string') return;
-    wx.navigateTo({
-      url: `/pages/goods/details/index?spuId=${spuId}`,
-    });
-  },
-  onReTry() {
-    this.loadGoodsList();
-  },
-  async loadGoodsList(fresh = false) {
-    if (fresh) {
-      wx.pageScrollTo({
-        scrollTop: 0,
-      });
-    }
+        try {
+            // 获取路线信息
+            const {
+                records: nextList,
+                total
+            } = await listRoutes({
+                pageNumber: pageIndex,
+                pageSize
+            });
 
-    this.setData({ goodsListLoadStatus: LIST_LOADING_STATUS.LOADING });
+            await Promise.all(nextList.map(async (route) => (route.swiper_images = await getCloudImageTempUrl(route.swiper_images))));
 
-    const pageSize = this.goodListPagination.num;
-    const pageIndex = fresh ? 1 : this.goodListPagination.index;
+            await Promise.all(nextList.map(async (route) => (route.price = await getPrice(route._id).catch(() => 0.01))));
 
-    try {
-      const { records: nextList, total } = await listGood({ pageNumber: pageIndex, pageSize });
-      const images = nextList.map((x) => x.cover_image);
-      const handledImages = await getCloudImageTempUrl(images);
-      handledImages.forEach((image, index) => (nextList[index].cover_image = image));
-      await Promise.all(nextList.map(async (spu) => (spu.price = await getPrice(spu._id).catch(() => 0.01))));
+            const routeList = fresh ? nextList : this.data.routeList.concat(nextList);
 
-      const goodsList = fresh ? nextList : this.data.goodsList.concat(nextList);
+            this.setData({
+                routeList,
+                routeListLoadStatus: routeList.length >= total ? LIST_LOADING_STATUS.NO_MORE : LIST_LOADING_STATUS.READY,
+            });
 
-      this.setData({
-        goodsList,
-        goodsListLoadStatus: goodsList.length >= total ? LIST_LOADING_STATUS.NO_MORE : LIST_LOADING_STATUS.READY,
-      });
-
-      this.goodListPagination.index = pageIndex + 1;
-      this.goodListPagination.num = pageSize;
-    } catch (err) {
-      console.error('error', err);
-      this.setData({ goodsListLoadStatus: LIST_LOADING_STATUS.FAILED });
-    }
-  },
+            this.routeListPagination.index = pageIndex + 1;
+            this.routeListPagination.num = pageSize;
+        } catch (err) {
+            console.error('error', err);
+            this.setData({
+                routeListLoadStatus: LIST_LOADING_STATUS.FAILED
+            });
+        }
+    },
 });

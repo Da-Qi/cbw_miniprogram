@@ -1,7 +1,7 @@
 <view id="{{independentID}}" class="goods-card" bind:tap="clickHandle" data-goods="{{ goods }}">
   <view class="goods-card__main">
     <view class="goods-card__thumb" bind:tap="clickThumbHandle">
-      <t-image wx:if="{{ !!goods.cover_image }}" t-class="goods-card__img" src="{{ goods.cover_image }}" mode="aspectFill" lazy-load />
+      <t-image wx:if="{{ !!goods.swiper_images[0] }}" t-class="goods-card__img" src="{{ goods.swiper_images[0] }}" mode="aspectFill" lazy-load />
     </view>
     <view class="goods-card__body">
       <view class="goods-card__upper">
@@ -9,6 +9,7 @@
       </view>
       <view class="goods-card__down">
         <price wx:if="{{ goods.price }}" wr-class="spec-for-price" symbol-class="spec-for-symbol" symbol="{{currency}}" price="{{goods.price * 100}}" />
+        <text wx:if="{{ goods.price }}" class="spec-for-price"> 起</text>
         <t-icon class="goods-card__add-cart" prefix="wr" name="cartAdd" id="{{independentID}}-cart" data-id="{{independentID}}" catchtap="addCartHandle" size="48rpx" color="#FA550F" />
       </view>
     </view>

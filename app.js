@@ -19,6 +19,7 @@ App({
   globalData: {
     userInfo: null, // 用户信息
     isLogin: false,
-    loginListeners: []  // 用于存储组件的回调
+    loginListeners: [],  // 用于存储组件的回调
+    needRefreshRoute: false, // 路线页面是否需要刷新
   }
 });
