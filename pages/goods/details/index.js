@@ -2,11 +2,11 @@
 import Toast from 'tdesign-miniprogram/toast/index';
 
 // 服务层
-import { getAllAttrValues } from '../../../services/attrValue/attrValue';
-import { handleSpuCloudImage, getSpu } from '../../../services/good/spu';
 import { fetchCartItems, createCartItem, updateCartItemCount } from '../../../services/cart/cart';
-import { getGoodsDetailCommentInfo } from '../../../services/comments/comments';
-import { getAllSku } from '../../../services/sku/sku';
+
+// 调用Route的函数
+import {getRoute,handleRouteCloudImage} from '../../../services/route/route'
+import {getAllRouteServices} from '../../../services/route_service/route_service'
 
 // 工具函数
 import { cdnBase } from '../../../config/index';
@@ -59,7 +59,7 @@ Page({
     activityList: [],
     recLeftImg,
     recRightImg,
-    details: {},
+    details: [],
     jumpArray: [
       {
         title: '首页',
@@ -156,51 +156,10 @@ Page({
   },
 
   chooseSpecItem(e) {
-    const { specList } = this.data.details;
-    const { selectedSku, isAllSelectedSku } = e.detail;
-    if (!isAllSelectedSku) {
-      this.setData({
-        selectSkuSellsPrice: 0,
-      });
-    }
-    this.setData({
-      isAllSelectedSku,
-    });
-    this.getSkuItem(specList, selectedSku);
-  },
-
-  getSkuItem(specList, selectedSku) {
-    const { skuArray, primaryImage } = this.data;
-    const selectedSkuValues = this.getSelectedSkuValues(specList, selectedSku);
-    let selectedAttrStr = ` 件  `;
-    selectedSkuValues.forEach((item) => {
-      selectedAttrStr += `，${item.specValue}  `;
-    });
-    // eslint-disable-next-line array-callback-return
-    const skuItem = skuArray.filter((item) => {
-      let status = true;
-      (item.specInfo || []).forEach((subItem) => {
-        if (!selectedSku[subItem.specId] || selectedSku[subItem.specId] !== subItem.specValueId) {
-          status = false;
-        }
-      });
-      if (status) return item;
-    });
-    this.selectSpecsName(selectedSkuValues.length > 0 ? selectedAttrStr : '');
-    if (skuItem) {
-      this.setData({
-        selectItem: skuItem,
-        selectSkuSellsPrice: skuItem.price || 0,
-      });
-    } else {
-      this.setData({
-        selectItem: null,
-        selectSkuSellsPrice: 0,
-      });
-    }
-    this.setData({
-      specImg: skuItem && skuItem.skuImage ? skuItem.skuImage : primaryImage,
-    });
+    const service_name = e.detail.pickedService.service_name
+    let selectedAttrStr = ` 张  `;
+    selectedAttrStr += `，${service_name}  `;
+    this.selectSpecsName(selectedAttrStr);
   },
 
   // 获取已选择的sku名称
@@ -285,12 +244,8 @@ Page({
   },
 
   gotoBuy(e) {
-    const overCount = () => this.toast('超过购买上限了');
     const buyCount = e.detail.count;
     const skuId = e.detail.pickedSku._id;
-    const skuCount = e.detail.pickedSku.count;
-    if (buyCount > skuCount) return overCount();
-
     wx.navigateTo({
       url: `/pages/order/order-confirm/index?${objectToParamString({ type: 'direct', count: buyCount, skuId })}`,
     });
@@ -330,87 +285,45 @@ Page({
     });
   },
 
-  async getInfo(spuId) {
-    // pics
-    // min price
-    // spu title
-    // attrs => sku => count + price
-    // spu detail
-    // comment
-    const spu = await getSpu(spuId);
-
-    const loadSkus = async () => {
-      const skus = await getAllSku(spuId);
-      const minPrice = skus.reduce((acc, current) => Math.min(acc, current.price), Infinity) * 100;
-      const loadSkuAttrValues = async () => {
-        return Promise.all(
-          skus.map(async (sku) => {
-            const attrValues = await getAllAttrValues(sku._id);
-            sku.attrValues = attrValues;
-          }),
-        );
-      };
-      const handleSkuImages = async () => {
-        const images = skus.map((s) => s.image ?? '');
-        const handledImages = await getCloudImageTempUrl(images);
-        handledImages.forEach((image, index) => (skus[index].image = image));
-      };
-      await Promise.all([handleSkuImages(), loadSkuAttrValues()]);
-      return { skus, minPrice };
+  async getInfo(routeId) {
+    const route = await getRoute(routeId);
+    const loadRouteServices = async () => {
+      const services = await getAllRouteServices(routeId);
+      console.log('service_length ' + services.length)
+      const minPrice = services.reduce((acc, current) => Math.min(acc, current.price), Infinity) * 100;
+      return { services, minPrice };
     };
 
-    const [_x, { skus, minPrice }, commentInfo] = await Promise.all([
-      handleSpuCloudImage(spu),
-      loadSkus(),
-      getGoodsDetailCommentInfo(spu._id),
+    const [_x, { services, minPrice }] = await Promise.all([
+        handleRouteCloudImage(route),
+        loadRouteServices(),
     ]);
 
-    const [
-      {
-        data: { records, total: commentCount },
-      },
-      {
-        data: { total: goodCommentCount },
-      },
-    ] = commentInfo;
-
-    records.forEach((x) => (x.userNameString = x.createBy.substring(0, 10)));
-
-    const detail = await replaceCloudImageWithTempUrl(spu.detail);
+    const detail = await getCloudImageTempUrl(route.detail);
 
     this.setData({
       details: {
-        images: spu.swiper_images,
-        title: spu.name,
+        images: route.swiper_images,
+        title: route.name,
       },
       minSalePrice: minPrice,
       detail,
       descPopUpInitProps: {
-        skus,
+        services,
         minPrice,
-        spu,
+        route,
       },
-      commentsStatistics: {
-        commentCount,
-        goodRate: (goodCommentCount / commentCount) * 100,
-      },
-      spu,
-      commentsList: records,
-    });
-  },
-
-  /** 跳转到评价列表 */
-  navToCommentsListPage() {
-    wx.navigateTo({
-      url: `/pages/goods/comments/index?spuId=${this.data.spu._id}`,
+      route,
     });
   },
 
   async onLoad(query) {
-    const { spuId } = query;
+    console.log('details: ' + query)
+    const { routeId } = query;
+    console.log('routeId: ' + routeId)
     this.setLoading();
     try {
-      await this.getInfo(spuId);
+      await this.getInfo(routeId);
     } catch (e) {
       console.error(e);
       this.toast('获取商品详情失败');

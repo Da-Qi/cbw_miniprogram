@@ -132,6 +132,13 @@
   color: #fa4126;
   margin: 0;
 }
+.goods-price-up {
+    color: #fa4126;
+    font-size: 28rpx;
+    position: relative;
+    bottom: 1rpx;
+    left: 4rpx;
+}
 
 .spec-for-symbol {
   font-size: 24rpx;

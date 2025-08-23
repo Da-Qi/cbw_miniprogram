@@ -254,7 +254,7 @@
 
 .popup-sku-actions .sku-operate {
   height: 80rpx;
-  width: 50%;
+  width: 100%;
   color: #fff;
   border-radius: 48rpx;
 }
@@ -272,7 +272,7 @@
 
 .popup-sku-actions .sku-operate .sku-operate-buyNow {
   background-color: #fa4126;
-  border-radius: 0 48rpx 48rpx 0;
+  border-radius: 48rpx;
 }
 
 .popup-sku-actions .sku-operate .sku-operate-buyNow.disabled {

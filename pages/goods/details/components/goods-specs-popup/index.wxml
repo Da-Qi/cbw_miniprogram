@@ -13,7 +13,7 @@
         <!-- 已选规格 -->
         <view class="popup-sku__selected-spec">
           <view>选择：</view>
-          <view wx:for="{{attrList}}" wx:key="specId">
+          <view wx:for="{{serviceList}}" wx:key="specId">
             <view class="popup-sku__selected-item" wx:for="{{item.values}}" wx:for-item="selectedItem" wx:if="{{selectedItem.status === 'picked'}}" wx:key="_id">
               {{selectedItem.value}}
             </view>
@@ -23,7 +23,7 @@
     </view>
     <view class="popup-sku-body">
       <view class="popup-sku-group-container">
-        <view class="popup-sku-row" wx:for="{{attrList}}" wx:key="specId">
+        <view class="popup-sku-row" wx:for="{{serviceList}}" wx:key="specId">
           <view class="popup-sku-row__title">{{item.name}}</view>
           <block wx:for="{{item.values}}" wx:for-item="valuesItem" wx:for-index="valuesIndex" wx:key="_id">
             <view class="popup-sku-row__item {{valuesItem.status === 'picked' ? 'popup-sku-row__item--active' : ''}} {{valuesItem.status === 'disabled' ? 'disabled-sku-selected' : ''}}" data-attr-name-index="{{index}}" data-attr-value-index="{{valuesIndex}}" bindtap="clickAttrValue">
@@ -43,17 +43,12 @@
       </view>
     </view>
     <view wx:if="{{outOperateStatus !== 'no'}}" class="single-confirm-btn {{pickedSku == null ? 'disabled' : ''}}" bindtap="specsConfirm">
-      确定
+      确定 (总额:<price class="total-price" price="{{totalSalePrice * 100}}" fill="{{false}}" decimalSmaller />)
     </view>
     <view class="popup-sku-actions flex flex-between {{!isStock ? 'popup-sku-disabled' : ''}}" wx:if="{{outOperateStatus === 'no'}}">
       <view class="sku-operate">
-        <view class="selected-sku-btn sku-operate-addCart {{pickedSku == null ? 'disabled' : ''}}" bindtap="addCart">
-          加入购物车
-        </view>
-      </view>
-      <view class="sku-operate">
-        <view class="selected-sku-btn sku-operate-buyNow  {{pickedSku == null ? 'disabled' : ''}}" bindtap="buyNow">
-          立即购买
+        <view class="selected-sku-btn sku-operate-buyNow  {{pickedSku == null ? 'disabled' : ''}}" bindtap="handlePopupHide">
+          确定
         </view>
       </view>
     </view>

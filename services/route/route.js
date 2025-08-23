@@ -11,6 +11,7 @@ import {
 import {
     ROUTE_MOCK
 } from '../cloudbaseMock/index';
+import { getCloudImageTempUrl } from '../../utils/cloudImageHandler';
 
 const ROUTE_MODEL_KEY = DATA_MODEL_KEY.ROUTE;
 const ROUTE_SERVICE_MODEL_KEY = DATA_MODEL_KEY.ROUTE_SERVICE;
@@ -18,7 +19,7 @@ const ROUTE_SERVICE_MODEL_KEY = DATA_MODEL_KEY.ROUTE_SERVICE;
 /**
  * 路线是否启用
  */
-export const SPU_SELLING_STATUS = true;
+export const ROUTE_SELLING_STATUS = true;
 
 export async function createRoute({
     name,
@@ -74,7 +75,7 @@ export async function listRoutes({
     const filter = {
         where: {
             status: {
-                $eq: SPU_SELLING_STATUS
+                $eq: ROUTE_SELLING_STATUS
             }
         },
     };
@@ -122,3 +123,26 @@ export async function getPrice(routeId) {
     console.log(records[0])
     return records[0].price;
 }
+
+export async function getRoute(routeId) {
+    if (cloudbaseTemplateConfig.useMock) {
+      return ROUTE_MOCK.find((x) => x._id === routeId);
+    }
+    return (
+      await model()[ROUTE_MODEL_KEY].get({
+        filter: {
+          where: { _id: { $eq: routeId } },
+        },
+      })
+    ).data;
+  }
+
+  export async function handleRouteCloudImage(route) {
+    if (route == null) {
+      return;
+    }
+    const handledImages = await getCloudImageTempUrl([...route.swiper_images]);
+    handledImages.forEach((image, index) => {
+      route.swiper_images[index] = image;
+    });
+  }

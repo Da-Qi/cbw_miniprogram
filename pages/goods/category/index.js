@@ -3,7 +3,7 @@ import {
     LIST_LOADING_STATUS
 } from '../../../utils/listLoading';
 import {
-    getCloudImageTempUrl
+    getSingleCloudImageTempUrl
 } from '../../../utils/cloudImageHandler';
 import {
     listRoutes,
@@ -57,10 +57,11 @@ Page({
         this.init();
     },
     routeListClickHandle(e) {
-        const spuId = e?.detail?.goods?._id;
-        if (typeof spuId !== 'string') return;
+        console.log(e.detail)
+        const routeId = e?.detail?.goods?._id;
+        if (typeof routeId !== 'string') return;
         wx.navigateTo({
-            url: `/pages/goods/details/index?spuId=${spuId}`,
+            url: `/pages/goods/details/index?routeId=${routeId}`,
         });
     },
     routeListAddCartHandle(e) {
@@ -95,7 +96,7 @@ Page({
                 pageSize
             });
 
-            await Promise.all(nextList.map(async (route) => (route.swiper_images = await getCloudImageTempUrl(route.swiper_images))));
+            await Promise.all(nextList.map(async (route) => (route.swiper_images[0] = await getSingleCloudImageTempUrl(route.swiper_images[0]))));
 
             await Promise.all(nextList.map(async (route) => (route.price = await getPrice(route._id).catch(() => 0.01))));
 

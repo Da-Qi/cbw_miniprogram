@@ -9,7 +9,7 @@
   </view>
 </view>
 <view class="goods-category-class">
-  <goods-list wr-class="goods-list-container" goodsList="{{routeList}}" bind:click="goodListClickHandle" bind:addcart="goodListAddCartHandle" />
+  <goods-list wr-class="goods-list-container" goodsList="{{routeList}}" bind:click="routeListClickHandle" bind:addcart="goodListAddCartHandle" />
   <load-more list-is-empty="{{!routeList.length}}" status="{{routeListLoadStatus}}" bind:retry="onReTry" />
   <t-toast id="t-toast" />
 </view>
