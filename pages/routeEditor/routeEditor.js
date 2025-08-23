@@ -110,7 +110,7 @@ Page({
         const index = e.currentTarget.dataset.index;
         const value = e.detail.value;
         const services = [...this.data.services];
-        services[index].name = value;
+        services[index].service_name = value;
         this.setData({
             services
         });
@@ -121,19 +121,31 @@ Page({
      */
     onServicePriceChange(e) {
         const index = e.currentTarget.dataset.index;
-        let value = e.detail.value;
-
-        // 简单的价格格式化处理
-        if (value) {
-            // 确保是数字
-            value = parseFloat(value).toFixed(2);
+        let inputValue = e.detail.value;  // 获取最终输入值
+    
+        // 1. 校验逻辑（在用户输入完成后执行）
+        let validatedValue = "0.00";  // 默认值
+        if (inputValue) {
+          // 过滤非数字和处理格式
+          inputValue = inputValue.replace(/[^\d.]/g, '');
+          
+          // 校验是否为有效数字
+          if (!isNaN(parseFloat(inputValue))) {
+            // 格式化为两位小数
+            validatedValue = parseFloat(inputValue).toFixed(2);
+          } else {
+            // 无效输入时给出提示
+            wx.showToast({
+              title: '请输入有效数字',
+              icon: 'none',
+              duration: 1500
+            });
+          }
         }
-
+        // 2. 更新数据
         const services = [...this.data.services];
-        services[index].price = value;
-        this.setData({
-            services
-        });
+        services[index].price = validatedValue;
+        this.setData({ services });
     },
 
     /**
