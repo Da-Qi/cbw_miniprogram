@@ -1,0 +1,266 @@
+/* 条款页面样式 */
+.terms-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+  }
+  .price-num {
+    color: #fa4126;
+  }
+  
+  /* 导航栏 */
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    padding: 16rpx 24rpx;
+    background-color: white;
+    border-bottom: 1rpx solid #eee;
+  }
+  
+  .back-btn {
+    background: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-title {
+    font-size: 36rpx;
+    font-weight: bold;
+    flex: 1;
+    text-align: center;
+  }
+  
+  .empty-space {
+    width: 40rpx; /* 与返回按钮宽度保持一致，使标题居中 */
+  }
+  
+  /* 条款内容区域 */
+  .terms-content {
+    flex: 1;
+    padding: 24rpx;
+    box-sizing: border-box;
+  }
+  
+  .terms-header {
+    background-color: white;
+    padding: 24rpx;
+    border-radius: 16rpx;
+    margin-bottom: 24rpx;
+  }
+  
+  .trip-title {
+    font-size: 34rpx;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 16rpx;
+  }
+  
+  .trip-date {
+    font-size: 28rpx;
+    color: #666;
+  }
+  
+  /* 条款章节样式 */
+  .terms-section {
+    background-color: white;
+    padding: 24rpx;
+    border-radius: 16rpx;
+    margin-bottom: 24rpx;
+  }
+  
+  .section-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 16rpx;
+    padding-left: 8rpx;
+    border-left: 4rpx solid #1677ff;
+  }
+  
+  .section-content {
+    font-size: 28rpx;
+    color: #666;
+    line-height: 1.8;
+  }
+  
+  .section-content text {
+    display: block;
+    margin-bottom: 16rpx;
+  }
+  
+  /* 底部确认区域 */
+  .confirm-bar {
+    background-color: white;
+    padding: 24rpx;
+    border-top: 1rpx solid #eee;
+  }
+  
+  .agree-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24rpx;
+    font-size: 28rpx;
+    color: #333;
+  }
+  
+  .agree-label checkbox {
+    margin-right: 12rpx;
+  }
+  
+  .pay-btn {
+    width: 100%;
+    height: 96rpx;
+    line-height: 96rpx;
+    font-size: 32rpx;
+    background-color: #1677ff;
+    color: white;
+    border-radius: 48rpx;
+  }
+  
+  .pay-btn[disabled] {
+    background-color: #ccc;
+    color: #999;
+  }
+  /* 旅游信息区 */
+.trip-info {
+    background-color: white;
+    margin: 20rpx;
+    border-radius: 16rpx;
+    padding: 24rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+  }
+  .info-item {
+    display: flex;
+    padding: 12rpx 0;
+    border-bottom: 1rpx dashed #eee;
+  }
+  .info-item:last-child {
+    border-bottom: none;
+  }
+  .info-label {
+    width: 200rpx;
+    font-size: 28rpx;
+    color: #666;
+  }
+  .info-value {
+    flex: 1;
+    font-size: 28rpx;
+    color: #333;
+    word-break: break-all;
+  }
+  
+  /* 报名人表单区 */
+  .applicants-wrap {
+    background-color: white;
+    margin: 20rpx;
+    border-radius: 16rpx;
+    padding: 24rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.05);
+  }
+  .form-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 16rpx;
+  }
+  .required-tip {
+    font-size: 24rpx;
+    color: #ff4d4f;
+    margin-bottom: 24rpx;
+  }
+  
+  /* 单个报名人表单 */
+  .applicant-form {
+    border: 1rpx solid #eee;
+    border-radius: 12rpx;
+    padding: 20rpx;
+    margin-bottom: 20rpx;
+  }
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20rpx;
+    padding-bottom: 10rpx;
+    border-bottom: 1rpx solid #f0f0f0;
+  }
+  .form-index {
+    font-size: 28rpx;
+    font-weight: bold;
+    color: #333;
+  }
+  .required-mark {
+    font-size: 24rpx;
+    color: #1677ff;
+  }
+  
+  /* 表单项样式 */
+  .form-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24rpx;
+  }
+  .item-label {
+    font-size: 28rpx;
+    color: #333;
+    margin-bottom: 8rpx;
+  }
+  .required {
+    color: #ff4d4f;
+  }
+  .item-input {
+    height: 80rpx;
+    border: 1rpx solid #ddd;
+    border-radius: 8rpx;
+    padding: 0 20rpx;
+    font-size: 28rpx;
+  }
+  .item-picker {
+    height: 80rpx;
+    border: 1rpx solid #ddd;
+    border-radius: 8rpx;
+    padding: 0 20rpx;
+    display: flex;
+    align-items: center;
+  }
+  .picker-view {
+    font-size: 28rpx;
+    color: #333;
+  }
+  
+  /* 集合地点选项 */
+  .location-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16rpx;
+    margin-top: 8rpx;
+  }
+  .location-item {
+    display: flex;
+    align-items: center;
+    padding: 12rpx 20rpx;
+    border: 1rpx solid #ddd;
+    border-radius: 30rpx;
+    font-size: 26rpx;
+    margin-bottom: 10rpx;
+  }
+  .location-item radio {
+    margin-right: 8rpx;
+  }
+  
+  /* 提交按钮 */
+  .submit-btn {
+    width: calc(100% - 40rpx);
+    height: 96rpx;
+    line-height: 96rpx;
+    font-size: 32rpx;
+    background-color: #1677ff;
+    color: white;
+    border-radius: 48rpx;
+    margin: 40rpx 20rpx 20rpx;
+  }

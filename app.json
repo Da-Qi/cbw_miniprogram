@@ -32,7 +32,8 @@
     "pages/usercenter/name-edit/index",
     "pages/webview/webview",
     "pages/testpage/testpage",
-    "pages/routeEditor/routeEditor"
+    "pages/routeEditor/routeEditor",
+    "pages/term/registration"
   ],
   "tabBar": {
     "custom": true,

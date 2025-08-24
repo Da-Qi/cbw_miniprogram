@@ -1,0 +1,223 @@
+<!-- 条款页面 WXML -->
+ <!-- 旅游信息展示区 -->
+ <view class="terms-container" wx:if="{{!showTerm}}">
+  <view class="trip-info">
+    <view class="info-item">
+      <text class="info-label">旅游路线：</text>
+      <text class="info-value">{{route.name}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">所选服务：</text>
+      <text class="info-value">{{routeService.name}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">服务单价：</text>
+      <price price="{{routeService.price * 100}}" class="price-num" />
+    </view>
+    <view class="info-item">
+      <text class="info-label">服务总价：</text>
+      <price price="{{routeService.price * count * 100}}" class="price-num" />
+    </view>
+  </view>
+
+  <!-- 报名人信息表单（动态生成） -->
+  <view class="applicants-wrap">
+    <text class="form-title">报名人信息</text>
+    <view class="required-tip">* 为必填项</view>
+
+    <!-- 循环渲染报名人表单 -->
+    <view class="applicant-form" wx:for="{{applicants}}" wx:for-item="item" wx:for-index="index" wx:key="index">
+      <view class="form-header">
+        <text class="form-index">第 {{index + 1}} 位报名人</text>
+        <text class="required-mark" wx:if="{{ticketCount > 1}}">可删除</text>
+      </view>
+
+      <!-- 姓名 -->
+      <view class="form-item">
+        <text class="item-label">姓名 <text class="required">*</text>：</text>
+        <input 
+          placeholder="请输入姓名" 
+          value="{{item.name}}" 
+          bindinput="onNameChange" 
+          data-index="{{index}}"
+          class="item-input"
+        />
+      </view>
+
+      <!-- 手机号码 -->
+      <view class="form-item">
+        <text class="item-label">手机号码 <text class="required">*</text>：</text>
+        <input 
+          placeholder="请输入手机号码" 
+          value="{{item.phone}}" 
+          bindinput="onPhoneChange" 
+          data-index="{{index}}"
+          type="number"
+          class="item-input"
+        />
+      </view>
+
+      <!-- 证件信息（类型+号码） -->
+      <view class="form-item">
+        <text class="item-label">证件类型 <text class="required">*</text>：</text>
+        <picker 
+          value="{{item.idTypeIndex}}" 
+          range="{{idTypes}}" 
+          bindchange="onIdTypeChange" 
+          data-index="{{index}}"
+          class="item-picker"
+        >
+          <view class="picker-view">{{idTypes[item.idTypeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="item-label">证件号码 <text class="required">*</text>：</text>
+        <input 
+          placeholder="请输入证件号码" 
+          value="{{item.idNumber}}" 
+          bindinput="onIdNumberChange" 
+          data-index="{{index}}"
+          class="item-input"
+        />
+      </view>
+
+      <!-- 出生日期（港澳台/外国证件显示） -->
+      <view class="form-item" wx:if="{{item.showBirthday}}">
+        <text class="item-label">出生日期 <text class="required">*</text>(港澳台/外国证件需提供)：</text>
+        <input 
+          placeholder="请输入出生日期（YYYY-MM-DD）" 
+          value="{{item.birthday}}" 
+          bindinput="onBirthdayChange" 
+          data-index="{{index}}"
+          class="item-input"
+        />
+      </view>
+
+      <!-- 宠物信息 -->
+      <view class="form-item">
+        <text class="item-label">宠物品种-名称 <text class="required">*</text>：</text>
+        <input 
+          placeholder="例：金毛-多多,比熊-优优" 
+          value="{{item.petInfo}}" 
+          bindinput="onPetInfoChange" 
+          data-index="{{index}}"
+          class="item-input"
+        />
+      </view>
+
+      <!-- 狗狗生日（非必填） -->
+      <view class="form-item">
+        <text class="item-label">狗狗生日：</text>
+        <input 
+          placeholder="请输入狗狗生日（YYYY-MM-DD，非必填）" 
+          value="{{item.dogBirthday}}" 
+          bindinput="onDogBirthdayChange" 
+          data-index="{{index}}"
+          class="item-input"
+        />
+      </view>
+
+      <!-- 集合地点（单选） -->
+      <!-- <view class="form-item">
+        <text class="item-label">集合地点 <text class="required">*</text>：</text>
+        <radio-group bindchange="onLocationChange" data-index="{{index}}">
+          <view class="location-options">
+            <label class="location-item" wx:for="{{locations}}" wx:key="id" wx:for-item="loc">
+              <radio value="{{loc.id}}" checked="{{item.locationId === loc.id}}" />
+              <text>{{loc.name}}</text>
+            </label>
+          </view>
+        </radio-group>
+      </view> -->
+
+      <!-- 备注（非必填） -->
+      <view class="form-item">
+        <text class="item-label">备注：</text>
+        <input 
+          placeholder="请输入特殊需求（非必填）" 
+          value="{{item.remark}}" 
+          bindinput="onRemarkChange" 
+          data-index="{{index}}"
+          class="item-input"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <button bindtap="onSubmit" class="submit-btn">提交信息</button>
+</view>
+
+<view class="terms-container" wx:if="{{showTerm}}">
+  <!-- 条款内容区域（可滚动） -->
+  <scroll-view class="terms-content" scroll-y>
+    <view class="terms-header">
+      <text class="trip-title">{{tripInfo.title}}</text>
+      <text class="trip-date">出行日期：{{tripInfo.date}}</text>
+    </view>
+
+    <!-- 核心条款区域 -->
+    <view class="terms-section">
+      <text class="section-title">一、行程说明</text>
+      <view class="section-content">
+        <text>1. 本次行程包含{{tripInfo.days}}天{{tripInfo.nights}}晚，具体行程安排以出团通知为准。</text>
+        <text>2. 行程中所列景点游览时间为参考时间，导游可根据实际情况调整游览顺序。</text>
+        <text>3. 如遇天气、交通等不可抗力因素，旅行社有权调整或取消部分行程。</text>
+      </view>
+    </view>
+
+    <view class="terms-section">
+      <text class="section-title">二、费用说明</text>
+      <view class="section-content">
+        <text>1. 费用包含：往返交通、住宿、门票、导游服务、保险费用。</text>
+        <text>2. 费用不含：个人消费、自费项目、因不可抗力产生的额外费用。</text>
+        <text>3. 儿童价适用年龄：2-12周岁，不含床位及门票费用。</text>
+      </view>
+    </view>
+
+    <view class="terms-section">
+      <text class="section-title">三、退改政策</text>
+      <view class="section-content">
+        <text>1. 出行前7天以上取消，全额退款；</text>
+        <text>2. 出行前3-6天取消，退款80%；</text>
+        <text>3. 出行前1-2天取消，退款50%；</text>
+        <text>4. 出行当天取消，不予退款。</text>
+      </view>
+    </view>
+
+    <view class="terms-section">
+      <text class="section-title">四、健康与安全</text>
+      <view class="section-content">
+        <text>1. 游客需确保自身健康状况适合本次旅行，如有特殊疾病请提前告知。</text>
+        <text>2. 旅行过程中请遵守导游安排，擅自离队发生意外责任自负。</text>
+        <text>3. 旅行社已为游客购买旅游意外险，具体保障范围详见保单。</text>
+      </view>
+    </view>
+
+    <view class="terms-section">
+      <text class="section-title">五、其他约定</text>
+      <view class="section-content">
+        <text>1. 报名即视为同意旅行社使用游客照片用于合理宣传（如需保密请提前说明）。</text>
+        <text>2. 本条款最终解释权归旅行社所有，如有疑问请联系客服：400-XXX-XXXX。</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部确认区域（固定定位） -->
+  <view class="confirm-bar">
+    <checkbox-group bindchange="onAgreeChange">
+      <label class="agree-label">
+        <checkbox value="agree" checked="{{isAgreed}}" color="#1677ff" />
+        <text>我已仔细阅读并同意以上条款</text>
+      </label>
+    </checkbox-group>
+
+    <button 
+      bindtap="onConfirm" 
+      class="pay-btn"
+      disabled="{{!isAgreed}}"
+    >
+      同意条款并登记信息
+    </button>
+  </view>
+</view>

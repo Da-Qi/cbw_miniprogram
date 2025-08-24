@@ -245,9 +245,9 @@ Page({
 
   gotoBuy(e) {
     const buyCount = e.detail.count;
-    const skuId = e.detail.pickedSku._id;
+    const routeServiceId = e.detail.pickedSku._id;
     wx.navigateTo({
-      url: `/pages/order/order-confirm/index?${objectToParamString({ type: 'direct', count: buyCount, skuId })}`,
+      url: `/pages/term/registration?${objectToParamString({count: buyCount, routeServiceId, routeId:this.data.route._id })}`,
     });
   },
 
