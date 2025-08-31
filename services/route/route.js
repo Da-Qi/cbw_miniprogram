@@ -28,14 +28,6 @@ export async function createRoute({
     detail,
     status
 }) {
-    //  if (cloudbaseTemplateConfig.useMock) {
-    //     ROUTE_MOCK.push({
-    //      address,
-    //      name,
-    //      phone,
-    //    });
-    //    return;
-    //  }
     return model()[ROUTE_MODEL_KEY].create({
         data: {
             name,

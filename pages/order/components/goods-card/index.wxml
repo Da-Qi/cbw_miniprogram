@@ -2,18 +2,18 @@
   <view class="wr-goods-card__main">
     <view class="wr-goods-card__thumb thumb-class" bind:tap="clickThumbHandle">
       <!-- data-src 是方便加购动画读取图片用的 -->
-      <t-image t-class="wr-goods-card__thumb-com" wx:if="{{ goods.sku.image }}" src="{{ goods.sku.image }}" mode="{{ thumbMode }}" lazy-load="{{ lazyLoad }}" />
+      <t-image t-class="wr-goods-card__thumb-com" wx:if="{{ goods.image }}" src="{{ goods.image }}" mode="{{ thumbMode }}" lazy-load="{{ lazyLoad }}" />
       <slot name="thumb-cover" />
     </view>
     <view class="wr-goods-card__body">
       <view class="wr-goods-card__long_content">
-        <view wx:if="{{ goods.sku.spu.name }}" class="wr-goods-card__title title-class" style="-webkit-line-clamp: {{ goods.lineClamp }};">
+        <view wx:if="{{ goods.name }}" class="wr-goods-card__title title-class" style="-webkit-line-clamp: {{ goods.lineClamp }};">
           <slot name="before-title" />
-          {{ goods.sku.spu.name }}
+          {{ goods.name }}
         </view>
         <slot name="after-title" />
         <slot name="after-desc" />
-        <view wx:if="{{ goods.sku.attr_value && goods.sku.attr_value.length > 0 }}" class="wr-goods-card__specs__desc specs-class" bind:tap="clickSpecsHandle">
+        <view class="wr-goods-card__specs__desc specs-class" bind:tap="clickSpecsHandle">
           <view class="wr-goods-card__specs__desc-text">{{ goods.specs }}</view>
         </view>
       </view>
@@ -23,8 +23,8 @@
             {{ pricePrefix }}
           </view>
           <slot name="price-prefix" />
-          <view wx:if="{{ goods.sku.price }}" class="wr-goods-card__price">
-            <price wr-class="price-class" symbol="{{currency}}" price="{{goods.sku.price * 100}}" fill="{{priceFill}}" decimalSmaller />
+          <view wx:if="{{ goods.route_service }}" class="wr-goods-card__price">
+            <price wr-class="price-class" symbol="{{currency}}" price="{{goods.route_service.price * 100}}" fill="{{priceFill}}" decimalSmaller />
           </view>
           <view wx:if="{{goods.count}}" class="wr-goods-card__num num-class">
             <text class="wr-goods-card__num__prefix">x</text>

@@ -75,7 +75,7 @@ Component({
       if (!this.checkOrder(order, OPERATION_TYPE.CANCEL)) return;
 
       // if order is paid, we should first refund
-      if (order.status !== ORDER_STATUS.TO_PAY) {
+      if (order.order_status !== ORDER_STATUS.TO_PAY) {
         try {
           await refund(order._id);
         } catch (e) {
@@ -90,11 +90,11 @@ Component({
       }
 
       try {
-        await updateOrderStatus({ orderId: order._id, status: ORDER_STATUS.CANCELED });
+        await updateOrderStatus({ orderId: order._id, order_status: ORDER_STATUS.CANCELED });
       } catch (e) {
         this.triggerEvent(OPERATION_DONE_EVENT, {
           type: OPERATION_TYPE.CANCEL,
-          message: 'update order status failed',
+          message: 'update order order_status failed',
           success: false,
           detail: e,
         });
@@ -128,11 +128,11 @@ Component({
       }
 
       try {
-        await updateOrderStatus({ orderId: order._id, status: ORDER_STATUS.FINISHED });
+        await updateOrderStatus({ orderId: order._id, order_status: ORDER_STATUS.FINISHED });
       } catch (e) {
         this.triggerEvent(OPERATION_DONE_EVENT, {
           type: OPERATION_TYPE.CONFIRM,
-          message: 'update order status failed',
+          message: 'update order order_status failed',
           success: false,
           detail: e,
         });
@@ -150,7 +150,7 @@ Component({
       try {
         await pay({ id: order._id, totalPrice: order.totalPrice });
         try {
-          await updateOrderStatus({ orderId: order._id, status: ORDER_STATUS.TO_SEND });
+          await updateOrderStatus({ orderId: order._id, order_status: ORDER_STATUS.TO_SEND });
         } catch (e) {
           console.error(e);
           this.triggerEvent(OPERATION_DONE_EVENT, {
@@ -191,7 +191,7 @@ Component({
     init(order) {
       if (order == null) return;
 
-      if (order.status === ORDER_STATUS.TO_PAY) {
+      if (order.order_status === ORDER_STATUS.TO_PAY) {
         this.setData({
           buttons: {
             left: [],
@@ -203,7 +203,7 @@ Component({
         });
         return;
       }
-      if (order.status === ORDER_STATUS.TO_SEND) {
+      if (order.order_status === ORDER_STATUS.TO_SEND) {
         this.setData({
           buttons: {
             left: [],
@@ -212,7 +212,7 @@ Component({
         });
         return;
       }
-      if (order.status === ORDER_STATUS.TO_RECEIVE) {
+      if (order.order_status === ORDER_STATUS.TO_RECEIVE) {
         this.setData({
           buttons: {
             left: [],
@@ -221,7 +221,7 @@ Component({
         });
         return;
       }
-      if (order.status === ORDER_STATUS.FINISHED) {
+      if (order.order_status === ORDER_STATUS.FINISHED) {
         this.setData({
           buttons: {
             left: [],
@@ -230,7 +230,7 @@ Component({
         });
         return;
       }
-      if (order.status === ORDER_STATUS.CANCELED) {
+      if (order.order_status === ORDER_STATUS.CANCELED) {
         this.setData({
           buttons: {
             left: [],
@@ -239,7 +239,7 @@ Component({
         });
         return;
       }
-      if (order.status === ORDER_STATUS.RETURN_APPLIED) {
+      if (order.order_status === ORDER_STATUS.RETURN_APPLIED) {
         this.setData({
           buttons: {
             left: [],
@@ -248,7 +248,7 @@ Component({
         });
         return;
       }
-      if (order.status === ORDER_STATUS.RETURN_REFUSED) {
+      if (order.order_status === ORDER_STATUS.RETURN_REFUSED) {
         this.setData({
           buttons: {
             left: [],
@@ -257,7 +257,7 @@ Component({
         });
         return;
       }
-      if (order.status === ORDER_STATUS.RETURN_FINISH) {
+      if (order.order_status === ORDER_STATUS.RETURN_FINISH) {
         this.setData({
           buttons: {
             left: [],
@@ -266,7 +266,7 @@ Component({
         });
         return;
       }
-      if (order.status === ORDER_STATUS.RETURN_MONEY_REFUSED) {
+      if (order.order_status === ORDER_STATUS.RETURN_MONEY_REFUSED) {
         this.setData({
           buttons: {
             left: [],

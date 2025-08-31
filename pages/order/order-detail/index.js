@@ -31,14 +31,15 @@ Page({
     });
   },
 
-  onLoad({ orderId }) {
-    if (orderId == null) {
+  onLoad({ order_id }) {
+    if (order_id == null) {
       toast('异常订单号');
       setTimeout(() => {
         wx.navigateBack();
       }, 1000);
     }
-    this.orderId = orderId;
+    console.log('order_id ' + order_id)
+    this.order_id = order_id;
     this.init();
     this.navbar = this.selectComponent('#navbar');
     this.pullDownRefresh = this.selectComponent('#wr-pull-down-refresh');
@@ -92,8 +93,8 @@ Page({
   },
 
   async getDetail() {
-    const orderId = this.orderId;
-    const [order, orderItems] = await Promise.all([getOrder(orderId), getAllOrderItemsOfAnOrder({ orderId })]);
+    const order_id = this.order_id;
+    const [order, orderItems] = await Promise.all([getOrder(order_id), getAllOrderItemsOfAnOrder({ order_id })]);
     order.orderItems = orderItems;
     order.totalPrice = orderItems.reduce((acc, cur) => acc + cur.count * cur.sku.price, 0);
     order.statusDesc = orderStatusToName(order.status);
@@ -201,29 +202,6 @@ Page({
     const { index } = e.currentTarget.dataset;
     const goods = this.data.order.orderItemVOs[index];
     wx.navigateTo({ url: `/pages/goods/details/index?spuId=${goods.spuId}` });
-  },
-
-  async onEditAddressTap() {
-    const deliveryInfoPromise = getAddressPromise();
-    // TODO: check url param
-    wx.navigateTo({
-      url: `/pages/usercenter/address/list/index?selectMode=true`,
-    });
-    try {
-      const deliveryInfo = await deliveryInfoPromise;
-      try {
-        await updateOrderDeliveryInfo({ orderId: this.data.order._id, deliveryInfoId: deliveryInfo._id });
-        this.setData({
-          'order.delivery_info._id': deliveryInfo._id,
-          'order.delivery_info.phone': deliveryInfo.phone,
-          'order.delivery_info.address': deliveryInfo.address,
-          'order.delivery_info.name': deliveryInfo.name,
-        });
-      } catch (e) {
-        console.error(e);
-        this.toast('更新地址失败');
-      }
-    } catch {}
   },
 
   onOrderNumCopy() {

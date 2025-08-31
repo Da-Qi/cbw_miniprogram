@@ -7,4 +7,3 @@
         <t-swiper width="100%" height="80vh" wx:if="{{imgSrcs.length > 0}}" current="{{current}}" autoplay="{{autoplay}}" duration="{{duration}}" interval="{{interval}}" navigation="{{navigation}}" imageProps="{{swiperImageProps}}" list="{{imgSrcs}}" />
     </view>
 </view>
-<button bindtap="goTest">去测试页面</button>

@@ -1,3 +1,5 @@
+import{createCustomers, IdType} from '../../services/order/customerInfo'
+import{createOrder} from '../../services/order/order'
 Page({
     data: {
         // 行程信息（从上个页面传递过来）
@@ -6,14 +8,15 @@ Page({
         isAgreed: false,
         showTerm: true,
         route: {
-            name: '去从化玩',
-
+            name: 'xx',
+            id: ''
         },
         routeService: {
-            name: '1人大巴',
-            price: 159.00
+            name: 'xx',
+            price: 0.01,
+            id: ''
         },
-        idTypes: ["身份证", "护照", "港澳居民通行证", "台湾居民往来大陆通行证", "中华人民共和国港澳居民居住证", "中华人民共和国台湾居民居住证", "军人证"],
+        idTypes: [],
         // 报名人信息列表（动态生成）
         applicants: [{
             name: "",
@@ -25,9 +28,10 @@ Page({
             petInfo: "",
             dogBirthday: "",
             locationId: null, // 选中的集合地点ID
-            remark: ""
-        }]
+        }],
+        remark:''
     },
+
     // 姓名输入变化
     onNameChange(e) {
         const {
@@ -58,6 +62,9 @@ Page({
             index
         } = e.currentTarget.dataset;
         const applicants = [...this.data.applicants];
+        console.log('picker发送选择改变，携带值为', e.detail.value)
+        console.log('applicants[index]', applicants[index])
+
         applicants[index].birthday = e.detail.value;
         this.setData({
             applicants
@@ -76,15 +83,21 @@ Page({
         });
     },
 
-    // 备注输入变化
-    onRemarkChange(e) {
+    onDogBirthdayChange(e) {
         const {
             index
         } = e.currentTarget.dataset;
         const applicants = [...this.data.applicants];
-        applicants[index].remark = e.detail.value;
+        applicants[index].dogBirthday = e.detail.value;
         this.setData({
             applicants
+        });
+    },
+
+    // 备注输入变化
+    onRemarkChange(e) {
+        this.setData({
+            remark: e.detail.value
         });
     },
 
@@ -104,7 +117,18 @@ Page({
         // 获取从订单页面传递的行程信息
         const count = JSON.parse(options.count);
         this.setData({
-            count
+            count,
+            idTypes: IdType.list,
+            route: {
+                name: options.routeName,
+                id: options.routeId
+            },
+            routeService: {
+                name: options.routeServiceName,
+                price: options.price,
+                id: options.routeServiceId
+            },
+            total_price: Number(Math.round(options.price * count * 100) / 100).toFixed(2)
         });
         // 根据购票数量更新报名人列表
         const initApplicantsList = () => {
@@ -121,7 +145,7 @@ Page({
                     idTypeIndex: 0,
                     idNumber: "",
                     showBirthday: false,
-                    birthday: "",
+                    birthday: '2000-01-01', //必须得赋值，不然不展示
                     petInfo: "",
                     dogBirthday: "",
                     locationId: null,
@@ -185,7 +209,7 @@ Page({
     },
 
     // 提交表单验证
-    onSubmit() {
+    async onSubmit() {
         const {
             applicants
         } = this.data;
@@ -234,23 +258,31 @@ Page({
         wx.showLoading({
             title: "提交中..."
         });
+        // 登记信息入库、订单信息入库
+        // 用户输入的登记信息入库，方便下次填写
+        const applicantsData = await createCustomers(applicants);
+        console.log(applicantsData.data.idList);
+        const customerList = applicantsData.data.idList;
+        await createOrder({
+            customerList,
+            route: this.data.route,
+            routeService: this.data.routeService,
+            applicants: applicants,
+            remark: this.data.remark,
+            order_status: 0,
+            total_price: this.data.total_price
+        })
+        wx.hideLoading();
+        wx.showToast({
+            title: "提交成功，跳转支付...",
+            icon: "success"
+        });
+        // 跳转至支付页面
         setTimeout(() => {
-            wx.hideLoading();
-            // 登记信息入库、订单信息入库
-            // 用户输入的登记信息入库，方便下次填写
-
-            // 订单信息，包含，route、route_service、order_user_id
-
-            wx.showToast({
-                title: "提交成功，跳转支付...",
-                icon: "success"
+            wx.navigateTo({
+                url: "/pages/payment/index"
             });
-            // 跳转至支付页面
-            setTimeout(() => {
-                wx.navigateTo({
-                    url: "/pages/payment/index"
-                });
-            }, 1500);
-        }, 1000);
+        }, 1500);
+
     }
 });

@@ -246,8 +246,16 @@ Page({
   gotoBuy(e) {
     const buyCount = e.detail.count;
     const routeServiceId = e.detail.pickedSku._id;
+    const routeServiceName = e.detail.pickedSku.service_name;
+    const price = e.detail.pickedSku.price;
     wx.navigateTo({
-      url: `/pages/term/registration?${objectToParamString({count: buyCount, routeServiceId, routeId:this.data.route._id })}`,
+        url: `/pages/term/registration?${objectToParamString({count: buyCount, 
+            routeServiceId, 
+            routeServiceName, 
+            routeId:this.data.route._id,
+            routeName: this.data.route.name,
+            price: price
+        })}`,
     });
   },
 

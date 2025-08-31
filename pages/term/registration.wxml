@@ -16,7 +16,7 @@
     </view>
     <view class="info-item">
       <text class="info-label">服务总价：</text>
-      <price price="{{routeService.price * count * 100}}" class="price-num" />
+      <price price="{{total_price * 100}}" class="price-num" />
     </view>
   </view>
 
@@ -63,11 +63,12 @@
         <picker 
           value="{{item.idTypeIndex}}" 
           range="{{idTypes}}" 
-          bindchange="onIdTypeChange" 
+          range-key="text"
+          bindchange="onIdTypeChange"
           data-index="{{index}}"
           class="item-picker"
         >
-          <view class="picker-view">{{idTypes[item.idTypeIndex]}}</view>
+          <view class="picker-view">{{idTypes[item.idTypeIndex].text}}</view>
         </picker>
       </view>
       <view class="form-item">
@@ -84,14 +85,19 @@
       <!-- 出生日期（港澳台/外国证件显示） -->
       <view class="form-item" wx:if="{{item.showBirthday}}">
         <text class="item-label">出生日期 <text class="required">*</text>(港澳台/外国证件需提供)：</text>
-        <input 
-          placeholder="请输入出生日期（YYYY-MM-DD）" 
+        <picker 
+            mode="date" 
+            data-index="{{index}}" 
+            value="{{item.birthday}}"
           value="{{item.birthday}}" 
-          bindinput="onBirthdayChange" 
-          data-index="{{index}}"
-          class="item-input"
-        />
+            value="{{item.birthday}}"
+            bindchange="onBirthdayChange"
+            start="2015-09-01" end="2017-09-01"
+            class="item-picker" >
+            <view class="picker-view">{{item.birthday}}</view>
+        </picker>
       </view>
+
 
       <!-- 宠物信息 -->
       <view class="form-item">
@@ -129,20 +135,18 @@
           </view>
         </radio-group>
       </view> -->
-
-      <!-- 备注（非必填） -->
-      <view class="form-item">
-        <text class="item-label">备注：</text>
-        <input 
-          placeholder="请输入特殊需求（非必填）" 
-          value="{{item.remark}}" 
-          bindinput="onRemarkChange" 
-          data-index="{{index}}"
-          class="item-input"
-        />
-      </view>
     </view>
   </view>
+
+    <!-- 备注（非必填） -->
+    <view class="trip-info">
+        <text class="item-label">订单备注：</text>
+        <input 
+            placeholder="请输入特殊需求（非必填）" 
+            bindinput="onRemarkChange" 
+            class="item-input"
+        />
+    </view>
 
   <!-- 提交按钮 -->
   <button bindtap="onSubmit" class="submit-btn">提交信息</button>

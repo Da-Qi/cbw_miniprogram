@@ -25,12 +25,6 @@ Page({
         userInfo: {}
     },
 
-    goTest() {
-        wx.navigateTo({
-            url: '/pages/testpage/testpage'
-        })
-    },
-
     privateData: {
         tabIndex: 0,
     },

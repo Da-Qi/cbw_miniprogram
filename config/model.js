@@ -5,10 +5,11 @@ export const DATA_MODEL_KEY = {
   COMMENT: 'shop_comment',
   DELIVERY_INFO: 'shop_delivery_info',
   HOME_SWIPER: 'shop_home_swiper_image',
-  ORDER: 'shop_order',
   ORDER_ITEM: 'shop_order_item',
   SKU: 'shop_sku',
   SPU: 'shop_spu',
   ROUTE: 'route',
-  ROUTE_SERVICE: 'route_services'
+  ROUTE_SERVICE: 'route_services',
+  CUSTOMER_INFO: 'customer_info',
+  ORDER_INFO: 'order_info'
 };

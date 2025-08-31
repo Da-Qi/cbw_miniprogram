@@ -417,14 +417,25 @@ export const DELIVERY_INFO = [{
 DELIVERY_INFO.pop();
 
 export const ORDER = [{
-    status: '',
-    delivery_info: {
-        _id: ''
-    },
-    _id: '',
-}, ];
+    "_id": "f1ebb68068b45d490098a3657e2ea54d",
+    "owner": "weda_o6Pdp1zo59H14A5P1g1x0KwzrtwM",
+    "route_id": "f97e292f68a5dcbb02b2fcbc1402ebb7",
+    "total_price": 798.0,
+    "route_name": "去从化玩咯",
+    "service_names": ["2人1宠（送宠物座位）"],
+    "customer_notes": "好玩啊",
+    "order_status": "0",
+    "createdAt": 1756650825938,
+    "createBy": "weda_o6Pdp1zo59H14A5P1g1x0KwzrtwM",
+    "updateBy": "weda_o6Pdp1zo59H14A5P1g1x0KwzrtwM",
+    "_openid": "o6Pdp1zo59H14A5P1g1x0KwzrtwM",
+    "service_ids": ["2ccbb81568a5dcbb02acdff17d975642"],
+    "customer_id": ["5ee6d14c68b45d470097649d60c9fd6f", "5ee6d14c68b45d470097649e7eb8d103"],
+    "order_id": "20250831223343587",
+    "updatedAt": 1756650825938
+}];
 
-ORDER.pop();
+// ORDER.pop();
 
 export const ORDER_ITEM = [{
     count: 0,

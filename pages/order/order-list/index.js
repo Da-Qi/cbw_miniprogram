@@ -2,11 +2,13 @@ import Toast from 'tdesign-miniprogram/toast/index';
 import { ORDER_STATUS, listOrder, orderStatusToName } from '../../../services/order/order';
 import { getAllOrderItemsOfAnOrder } from '../../../services/order/orderItem';
 import { LIST_LOADING_STATUS } from '../../../utils/listLoading';
-import { getCloudImageTempUrl } from '../../../utils/cloudImageHandler';
+import { getCloudImageTempUrl,getSingleCloudImageTempUrl } from '../../../utils/cloudImageHandler';
 import { OPERATION_TYPE } from '../../../utils/orderOperation';
 import { shouldFresh, orderListFinishFresh } from '../../../utils/orderListFresh';
+import {getRoute} from '../../../services/route/route'
+import {getRouteService} from '../../../services/route_service/route_service'
 
-const ORDER_STATUS_ALL = '0';
+const ORDER_STATUS_ALL = '999';
 
 Page({
   page: {
@@ -17,9 +19,9 @@ Page({
   data: {
     tabs: [
       { key: ORDER_STATUS_ALL, text: '全部', total: 0 },
-      { key: ORDER_STATUS.TO_PAY, text: '待付款', total: 0 },
-      { key: ORDER_STATUS.TO_SEND, text: '待发货', total: 0 },
-      { key: ORDER_STATUS.TO_RECEIVE, text: '待收货', total: 0 },
+      { key: ORDER_STATUS.TO_PAY, text: '待支付', total: 0 },
+      { key: ORDER_STATUS.PAID, text: '已支付', total: 0 },
+      { key: ORDER_STATUS.CANCELED, text: '已取消', total: 0 },
       { key: ORDER_STATUS.FINISHED, text: '已完成', total: 0 },
     ],
     curTab: ORDER_STATUS_ALL,
@@ -27,7 +29,7 @@ Page({
     listLoading: LIST_LOADING_STATUS.READY,
     emptyImg: 'https://cdn-we-retail.ym.tencent.com/miniapp/order/empty-order-list.png',
     backRefresh: false,
-    status: ORDER_STATUS_ALL,
+    order_status: ORDER_STATUS_ALL,
     pullDownRefreshing: false,
     loadingProps: {
       theme: 'circular',
@@ -51,11 +53,12 @@ Page({
   },
 
   onLoad(query) {
-    const status = this.data.tabs.find((x) => x.key === query.status)?.key ?? ORDER_STATUS_ALL;
+    const order_status = this.data.tabs.find((x) => x.key === query.order_status)?.key ?? ORDER_STATUS_ALL;
     this.setData({
-      status,
+        order_status,
     });
-    this.refreshList(status);
+    console.log('order_status ' + order_status)
+    this.refreshList(order_status);
   },
 
   async pullRefresh() {
@@ -87,15 +90,19 @@ Page({
   },
 
   async getOrderItems(order) {
-    const orderId = order._id;
+    const route_id = order.route_id;
     try {
-      const orderItems = await getAllOrderItemsOfAnOrder({ orderId });
-
-      const images = orderItems.map((x) => x.sku.image ?? '');
-      (await getCloudImageTempUrl(images)).forEach((image, index) => (orderItems[index].sku.image = image));
-
-      order.orderItems = orderItems;
-      order.totalPrice = orderItems.reduce((acc, cur) => acc + cur.sku.price * cur.count, 0);
+      const route = await getRoute(route_id);
+      order.route = []
+      const orderImage =  await getSingleCloudImageTempUrl(route.swiper_images[0])
+      order.route.route_service = {}
+      const route_service = await getRouteService(order.service_ids[0])
+      order.route.push({
+        image: orderImage,
+        name: route.name,
+        route_service: route_service,
+        count: order.customer_id.length
+    })
     } catch (e) {
       this.errorToast('获取订单详情失败', e);
     }
@@ -109,10 +116,9 @@ Page({
       const { records, total } = await listOrder({
         pageSize: this.page.size,
         pageNumber: this.page.num,
-        status: statusCode !== ORDER_STATUS_ALL ? statusCode : undefined,
+        order_status: statusCode !== ORDER_STATUS_ALL ? statusCode : ORDER_STATUS_ALL,
       });
-
-      records.forEach((order) => (order.statusDesc = orderStatusToName(order.status)));
+      records.forEach((order) => (order.statusDesc = orderStatusToName(order.order_status)));
 
       // async get items for each order
       await Promise.all(records.map((order) => this.getOrderItems(order)));
@@ -135,20 +141,21 @@ Page({
 
   onTabChange(e) {
     const { value } = e.detail;
+    console.log('onTabChange ' + value)
     this.setData({
-      status: value,
+        order_status: value,
     });
     this.refreshList(value);
   },
 
-  refreshList(status = ORDER_STATUS_ALL) {
+  refreshList(order_status = ORDER_STATUS_ALL) {
     this.page = {
       size: this.page.size,
       num: 1,
     };
-    this.setData({ curTab: status, orderList: [] });
+    this.setData({ curTab: order_status, orderList: [] });
 
-    return this.getOrderList(status, true);
+    return this.getOrderList(order_status, true);
   },
 
   onRefresh() {
@@ -158,7 +165,7 @@ Page({
   onOrderCardTap(e) {
     const { order } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: `/pages/order/order-detail/index?orderId=${order._id}`,
+      url: `/pages/order/order-detail/index?order_id=${order.order_id}`,
     });
   },
 

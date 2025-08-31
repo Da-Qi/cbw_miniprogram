@@ -57,7 +57,7 @@ Component({
         if (!goods) {
           return;
         }
-
+        console.log('goods ' + goods)
         // 敲定换行数量默认值
         if (goods.lineClamp === undefined || goods.lineClamp <= 0) {
           // tag数组长度 大于0 且 可见
@@ -68,7 +68,8 @@ Component({
             goods.lineClamp = 2;
           }
         }
-        goods.specs = goods.sku.attr_value.map((v) => v.value).join('，');
+        console.log('goods.route_service ' +  goods.route_service)
+        goods.specs = goods.route_service.service_name;
 
         this.setData({ goods });
       },
