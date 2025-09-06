@@ -6,6 +6,7 @@
   width: 100%;
   box-sizing: border-box;
   padding: 0rpx 0rpx calc(env(safe-area-inset-bottom) + 144rpx);
+  background-color: #f8f8f8;
 }
 
 .order-detail .count-down {
@@ -15,20 +16,7 @@
   width: 100%;
   background-color: #ffffff;
 }
-.order-detail .order-detail__header {
-  width: 700rpx;
-  height: 200rpx;
-  border-radius: 24rpx;
-  margin: 0 auto;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-image: url('https://cdn-we-retail.ym.tencent.com/miniapp/template/order-bg.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-}
+
 .order-detail .order-detail__header .title,
 .order-detail .order-detail__header .desc {
   color: #ffffff;
@@ -113,6 +101,33 @@
 
 .order-detail .padding-inline {
   padding: 16rpx 32rpx;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-detail .padding-inline .middle-des {
+    width: 100%;
+    height: 10rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32rpx;
+    line-height: 36rpx;
+    color: #333333;
+    background-color: #ffffff;
+}
+
+.order-detail .padding-inline .middle-des .customer-desc {
+    font-size: 28rpx;
+    line-height: 30rpx;
+    color: #999999;
+}
+
+.customerInfo {
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 10px;
 }
 
 .order-detail .pay-detail .pay-item {
@@ -243,3 +258,11 @@
   --td-button-default-color: #000;
   --td-button-primary-text-color: #fa4126;
 }
+
+.dashed-line {
+    /* 虚线样式：宽度 1px，虚线，颜色 #ccc */
+    border-top: 1px dashed #ccc;
+    /* 可选：控制虚线的位置和宽度 */
+    width: 100%;
+    margin: 10px 0; /* 上下间距 */
+  }

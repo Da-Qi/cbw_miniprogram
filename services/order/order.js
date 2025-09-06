@@ -112,7 +112,7 @@ export async function listOrder({ pageSize, pageNumber, order_status }) {
     };
   }
 
-  if (order_status != null) {
+  if (order_status != null && order_status !== String(999)) {
     return (
       await model()[ORDER_MODEL_KEY].list({
         filter: {
@@ -169,24 +169,15 @@ export async function getToReceiveOrderCount() {
  * @param {String} orderId
  */
 export async function getOrder(orderId) {
-  if (cloudbaseTemplateConfig.useMock) {
-    const order = ORDER.find(o => o.order_id === orderId);
-    return order
-  }
+//   if (cloudbaseTemplateConfig.useMock) {
+//     const order = ORDER.find(o => o.order_id === orderId);
+//     return order
+//   }
   return (
-    await model()[ORDER_MODEL_KEY].get({
+      await model()[ORDER_MODEL_KEY].get({
       filter: {
         where: {
             order_id: { $eq: orderId },
-        },
-      },
-      select: {
-        $master: true,
-        delivery_info: {
-          _id: true,
-          phone: true,
-          address: true,
-          name: true,
         },
       },
     })

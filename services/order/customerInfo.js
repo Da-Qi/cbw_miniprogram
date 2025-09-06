@@ -52,6 +52,16 @@ export const IdType = {
       ],
 };
 
+export function getIdTypeText(value) {
+  // 遍历map对象，找到value匹配的项
+  for (const key in IdType.map) {
+    if (IdType.map[key].value === value) {
+      return IdType.map[key].text;
+    }
+  }
+  return ''; // 未找到时返回空
+}
+
 
 /**
  *
@@ -65,13 +75,29 @@ export async function createCustomers(customerArray) {
     customerArray.forEach((item, index) => {
         dateModelArray.push({
             full_name: item.name,
-            date_of_birth: new Date(item.birthday).getTime(),
+            date_of_birth: item.showBirthday ? new Date(item.birthday).getTime() : null,
             id_number: item.idNumber,
             id_type: String(item.idTypeIndex),
-            phone_number: item.phone
+            phone_number: item.phone,
+            petInfo: item.petInfo
         })
     })
     return model()[CUSTOMER_INFO_MODEL_KEY].createMany({
             data: dateModelArray
         });
 }
+
+export async function listCustomerInfo(customerList) {
+    return (
+      await model()[CUSTOMER_INFO_MODEL_KEY].list({
+        filter: {
+            where: {
+               _id : {
+                   $in: customerList
+               }
+            }
+        },
+        getCount: true,
+      })
+    ).data;
+  }

@@ -4,6 +4,8 @@ import { orderListShouldFresh } from '../../../utils/orderListFresh';
 import { OrderStatus } from '../config';
 import { getAllOrderItemsOfAnOrder } from '../../../services/order/orderItem';
 import { getOrder, orderStatusToName, ORDER_STATUS, updateOrderDeliveryInfo } from '../../../services/order/order';
+import { listCustomerInfo,getIdTypeText } from '../../../services/order/customerInfo';
+import { getRouteService } from '../../../services/route_service/route_service';
 import { fetchBusinessTime } from '../../../services/order/orderDetail';
 import { getAddressPromise } from '../../usercenter/address/list/util';
 import { OPERATION_TYPE } from '../../../utils/orderOperation';
@@ -94,62 +96,22 @@ Page({
 
   async getDetail() {
     const order_id = this.order_id;
-    const [order, orderItems] = await Promise.all([getOrder(order_id), getAllOrderItemsOfAnOrder({ order_id })]);
-    order.orderItems = orderItems;
-    order.totalPrice = orderItems.reduce((acc, cur) => acc + cur.count * cur.sku.price, 0);
-    order.statusDesc = orderStatusToName(order.status);
-    order.isPaid = order.status !== ORDER_STATUS.TO_PAY;
+    const order = await getOrder(order_id);
+    order.statusDesc = orderStatusToName(order.order_status);
+    order.isPaid = order.order_status !== ORDER_STATUS.TO_PAY;
     order.createdTimeString = dayjs(new Date(order.createdAt)).format('YYYY-MM-DD HH:mm:ss');
-
-    this.setData({ order, addressEditable: order.statusDesc === '待付款' });
-    // console.log('ha', order);
-    // return fetchOrderDetail(params).then((res) => {
-    //   const order = res.data;
-    //   const _order = {
-    //     id: order.orderId,
-    //     orderNo: order.orderNo,
-    //     parentOrderNo: order.parentOrderNo,
-    //     storeId: order.storeId,
-    //     storeName: order.storeName,
-    //     status: order.orderStatus,
-    //     statusDesc: order.orderStatusName,
-    //     amount: order.paymentAmount,
-    //     totalAmount: order.goodsAmountApp,
-    //     logisticsNo: order.logisticsVO.logisticsNo,
-    //     goodsList: (order.orderItemVOs || []).map((goods) =>
-    //       Object.assign({}, goods, {
-    //         id: goods.id,
-    //         thumb: goods.goodsPictureUrl,
-    //         title: goods.goodsName,
-    //         skuId: goods.skuId,
-    //         spuId: goods.spuId,
-    //         specs: (goods.specifications || []).map((s) => s.specValue),
-    //         price: goods.tagPrice ? goods.tagPrice : goods.actualPrice, // 商品销售单价, 优先取限时活动价
-    //         num: goods.buyQuantity,
-    //         titlePrefixTags: goods.tagText ? [{ text: goods.tagText }] : [],
-    //         buttons: goods.buttonVOs || [],
-    //       }),
-    //     ),
-    //     buttons: order.buttonVOs || [],
-    //     createTime: order.createTime,
-    //     receiverAddress: this.composeAddress(order),
-    //     groupInfoVo: order.groupInfoVo,
-    //   };
-    //   this.setData({
-    //     order,
-    //     _order,
-    //     formatCreateTime: formatTime(parseFloat(`${order.createTime}`), 'YYYY-MM-DD HH:mm'), // 格式化订单创建时间
-    //     countDownTime: this.computeCountDownTime(order),
-    //     addressEditable:
-    //       [OrderStatus.PENDING_PAYMENT, OrderStatus.PENDING_DELIVERY].includes(order.orderStatus) &&
-    //       order.orderSubStatus !== -1, // 订单正在取消审核时不允许修改地址（但是返回的状态码与待发货一致）
-    //     isPaid: !!order.paymentVO.paySuccessTime,
-    //     invoiceStatus: this.datermineInvoiceStatus(order),
-    //     invoiceDesc: order.invoiceDesc,
-    //     invoiceType: order.invoiceVO?.invoiceType === 5 ? '电子普通发票' : '不开发票', //是否开票 0-不开 5-电子发票
-    //     logisticsNodes: this.flattenNodes(order.trajectoryVos || []),
-    //   });
-    // });
+    const route_service_id = order.service_ids[0];
+    order.route_service = await getRouteService(route_service_id);
+    const customer_info = (await listCustomerInfo(order.customer_id)).records;
+    customer_info.forEach(element => {
+        element.showBirthday = [1, 2, 3, 4, 5].includes(Number(element.id_type));
+        if (element.showBirthday) {
+            element.date_of_birth = dayjs(new Date(element.date_of_birth)).format('YYYY-MM-DD');
+        }
+        element.id_type = getIdTypeText(Number(element.id_type))
+    });
+    order.customer_info = customer_info;
+    this.setData({ order, addressEditable: order.statusDesc === '待支付' });
   },
 
   datermineInvoiceStatus(order) {
@@ -206,7 +168,7 @@ Page({
 
   onOrderNumCopy() {
     wx.setClipboardData({
-      data: this.data.order.orderNo,
+      data: this.data.order.order_id,
     });
   },
 
