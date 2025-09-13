@@ -1,5 +1,10 @@
-import{createCustomers, IdType} from '../../services/order/customerInfo'
-import{createOrder} from '../../services/order/order'
+import {
+    createCustomers,
+    IdType
+} from '../../services/order/customerInfo'
+import {
+    createOrder
+} from '../../services/order/order'
 Page({
     data: {
         // 行程信息（从上个页面传递过来）
@@ -30,7 +35,7 @@ Page({
             dogBirthday: "",
             locationId: null, // 选中的集合地点ID
         }],
-        remark:''
+        remark: ''
     },
 
     // 姓名输入变化
@@ -259,35 +264,45 @@ Page({
 
         // 验证通过，提交数据（实际项目中调用接口）
         wx.showLoading({
-            title: "提交中..."
+            title: "提交中...",
+            mask: true
         });
-        // 登记信息入库、订单信息入库
-        // 用户输入的登记信息入库，方便下次填写
-        const applicantsData = await createCustomers(applicants);
-        console.log(applicantsData.data.idList);
-        const customerList = applicantsData.data.idList;
-        await createOrder({
-            customerList,
-            route: this.data.route,
-            routeService: this.data.routeService,
-            applicants: applicants,
-            remark: this.data.remark,
-            order_status: 0,
-            total_price: this.data.total_price,
-            ticket_count: this.data.ticketCount,
-            person_count: this.data.personCount
-        })
-        wx.hideLoading();
-        wx.showToast({
-            title: "提交成功，跳转支付...",
-            icon: "success"
-        });
-        // 跳转至支付页面
-        setTimeout(() => {
-            wx.navigateTo({
-                url: "/pages/payment/index"
+        try {
+            // 登记信息入库、订单信息入库
+            // 用户输入的登记信息入库，方便下次填写
+            const applicantsData = await createCustomers(applicants);
+            const customerList = applicantsData.data.idList;
+            const orderId = await createOrder({
+                customerList,
+                route: this.data.route,
+                routeService: this.data.routeService,
+                applicants: applicants,
+                remark: this.data.remark,
+                order_status: 0,
+                total_price: this.data.total_price,
+                ticket_count: this.data.ticketCount,
+                person_count: this.data.personCount
+            })
+            wx.hideLoading();
+            // 调用支付逻辑
+            wx.showToast({
+                title: "提交成功，跳转支付...",
+                icon: "success"
             });
-        }, 1500);
 
+            // 跳转至订单页面
+            setTimeout(() => {
+                wx.navigateTo({
+                    url: `/pages/order/order-detail/index?order_id=${orderId}`,
+                });
+            }, 1500);
+        } catch (e) {
+            wx.showToast({
+                title: '提交失败',
+                icon: 'none'
+            });
+        } finally {
+            wx.hideLoading();
+        }
     }
 });

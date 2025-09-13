@@ -14,11 +14,12 @@ Page({
     data: {
         routeList: [],
         routeListLoadStatus: LIST_LOADING_STATUS.READY,
+        showConfirm: false,
     },
 
     routeListPagination: {
         index: 1,
-        num: 4,
+        num: 10,
     },
     async init() {
         this.loadRouteList();
@@ -61,7 +62,11 @@ Page({
         this.init();
     },
     routeListClickHandle(e) {
-        console.log(e.detail)
+        // 校验客户是否登录
+        if (!this.data.isLogin) {
+            this.setData({showLoginConfirm: true})
+            return;
+        }
         const routeId = e?.detail?.goods?._id;
         if (typeof routeId !== 'string') return;
         wx.navigateTo({
@@ -119,5 +124,17 @@ Page({
                 routeListLoadStatus: LIST_LOADING_STATUS.FAILED
             });
         }
+    },
+
+    confirmDialog(e) {
+        this.setData({
+            showLoginConfirm: true
+        });
+    },
+
+    closeDialog() {
+        this.setData({
+            showLoginConfirm: false
+        });
     },
 });

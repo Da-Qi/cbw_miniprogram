@@ -1,12 +1,4 @@
 import {
-    fetchUserCenter
-} from '../../services/usercenter/fetchUsercenter';
-import {
-    getToPayOrderCount,
-    getToSendOrderCount,
-    getToReceiveOrderCount
-} from '../../services/order/order';
-import {
     ORDER_STATUS
 } from '../../services/order/order';
 import Toast from 'tdesign-miniprogram/toast/index';

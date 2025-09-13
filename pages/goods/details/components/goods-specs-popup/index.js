@@ -193,7 +193,12 @@ Component({
             }
         }) {
             this.setData({
-                value,
+                value
+            });
+            if (this.data.pickedSku == null || this.data.pickedSku == undefined) {
+                return;
+            }
+            this.setData({
                 totalSalePrice: value * this.data.pickedSku.price
             });
             this.triggerEvent('changeNum', {

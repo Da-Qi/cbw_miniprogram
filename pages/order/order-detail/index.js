@@ -2,17 +2,16 @@ import Toast from 'tdesign-miniprogram/toast/index';
 import dayjs from 'dayjs';
 import { orderListShouldFresh } from '../../../utils/orderListFresh';
 import { OrderStatus } from '../config';
-import { getAllOrderItemsOfAnOrder } from '../../../services/order/orderItem';
 import { getOrder, orderStatusToName, ORDER_STATUS, updateOrderDeliveryInfo } from '../../../services/order/order';
 import { listCustomerInfo,getIdTypeText } from '../../../services/order/customerInfo';
 import { getRouteService } from '../../../services/route_service/route_service';
 import { fetchBusinessTime } from '../../../services/order/orderDetail';
-import { getAddressPromise } from '../../usercenter/address/list/util';
 import { OPERATION_TYPE } from '../../../utils/orderOperation';
 
 Page({
   data: {
     pageLoading: true,
+    order_id: '',
     order: {}, // 后台返回的原始数据
     _order: {}, // 内部使用和提供给 order-card 的数据
     storeDetail: {},
@@ -41,7 +40,9 @@ Page({
       }, 1000);
     }
     console.log('order_id ' + order_id)
-    this.order_id = order_id;
+    this.setData({
+        order_id
+    });
     this.init();
     this.navbar = this.selectComponent('#navbar');
     this.pullDownRefresh = this.selectComponent('#wr-pull-down-refresh');
@@ -67,7 +68,7 @@ Page({
   // 页面初始化，会展示pageLoading
   init() {
     this.setData({ pageLoading: true });
-    this.getStoreDetail();
+    //this.getStoreDetail();
     this.getDetail()
       .then(() => {
         this.setData({ pageLoading: false });
@@ -95,7 +96,7 @@ Page({
   },
 
   async getDetail() {
-    const order_id = this.order_id;
+    const order_id = this.data.order_id;
     const order = await getOrder(order_id);
     order.statusDesc = orderStatusToName(order.order_status);
     order.isPaid = order.order_status === ORDER_STATUS.PAID ||  order.order_status === ORDER_STATUS.FINISHED;

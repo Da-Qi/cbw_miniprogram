@@ -1,8 +1,10 @@
 <view wx:if="{{!isLogin}}" class="cloud-template-guide">
-<loginPrompt />
-  <view class="left">
-    <t-icon color="#0052D9" name="info-circle-filled" size="40rpx" />
-    当前为游客模式，请先登录以体验完整服务哦~
-  </view>
-  <button class="right" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">登录</button>
+    <view class="left">
+        <t-icon color="#0052D9" name="info-circle-filled" size="40rpx" />
+        当前为游客模式，请先登录以体验完整服务哦~
+    </view>
+    <button class="right" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">登录</button>
+    <t-dialog visible="{{showLoginConfirm}}" title="登录提示" content="请先确认登录以体验完整服务哦~" confirm-btn="{{ confirmBtn }}" cancel-btn="取消" bind:confirm="handleLoginConfirm" bind:cancel="closeDialog" />
+    <loading-dialog show="{{loging}}" />
+    <t-toast id="t-toast" />
 </view>

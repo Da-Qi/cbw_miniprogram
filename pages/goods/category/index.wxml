@@ -1,16 +1,15 @@
-<cloud-template-guide wx:if="{{!isLogin}}"/>
+<cloud-template-guide wx:if="{{!isLogin}}" showLoginConfirm="{{showLoginConfirm}}"/>
 <view class="article-card">
-  <text class="fixed-top-left">宠伴玩旅行社的公众号</text>
-  <view class="left-article">
-    <image src="cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/icon.png" class="cover-image" />
-    <text class="title">宠伴玩旅行社</text>
-  </view>
-  <view class="article-info" bind:tap="onOpenArticle">
-    <text class="desc">关注</text>
-  </view>
+    <text class="fixed-top-left">宠伴玩旅行社的公众号</text>
+    <view class="left-article">
+        <image src="cloud://cloudbase-8ggwz66a187bc814.636c-cloudbase-8ggwz66a187bc814-1373336490/icon.png" class="cover-image" />
+        <text class="title">宠伴玩旅行社</text>
+    </view>
+    <view class="article-info" bind:tap="onOpenArticle">
+        <text class="desc">关注</text>
+    </view>
 </view>
 <view class="goods-category-class">
-  <goods-list wr-class="goods-list-container" goodsList="{{routeList}}" bind:click="routeListClickHandle" bind:addcart="goodListAddCartHandle" />
-  <load-more list-is-empty="{{!routeList.length}}" status="{{routeListLoadStatus}}" bind:retry="onReTry" />
-  <t-toast id="t-toast" />
+    <goods-list wr-class="goods-list-container" goodsList="{{routeList}}" bind:click="routeListClickHandle" bind:addcart="routeListClickHandle" />
+    <load-more list-is-empty="{{!routeList.length}}" status="{{routeListLoadStatus}}" bind:retry="onReTry" />
 </view>
