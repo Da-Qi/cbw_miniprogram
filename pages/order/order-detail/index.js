@@ -98,7 +98,8 @@ Page({
     const order_id = this.order_id;
     const order = await getOrder(order_id);
     order.statusDesc = orderStatusToName(order.order_status);
-    order.isPaid = order.order_status !== ORDER_STATUS.TO_PAY;
+    order.isPaid = order.order_status === ORDER_STATUS.PAID ||  order.order_status === ORDER_STATUS.FINISHED;
+    console.log('order.isPaid ' + order.isPaid);
     order.createdTimeString = dayjs(new Date(order.createdAt)).format('YYYY-MM-DD HH:mm:ss');
     const route_service_id = order.service_ids[0];
     order.route_service = await getRouteService(route_service_id);

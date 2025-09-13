@@ -1,9 +1,9 @@
-<cloud-template-guide />
+<cloud-template-guide wx:if="{{!isLogin}}"/>
 <view style="text-align: center; color: #b9b9b9" wx:if="{{pageLoading}}">
     <t-loading theme="circular" size="40rpx" text="加载中..." inherit-color />
 </view>
 <view class="home-page-container">
     <view class="swiper-wrap">
-        <t-swiper width="100%" height="80vh" wx:if="{{imgSrcs.length > 0}}" current="{{current}}" autoplay="{{autoplay}}" duration="{{duration}}" interval="{{interval}}" navigation="{{navigation}}" imageProps="{{swiperImageProps}}" list="{{imgSrcs}}" />
+        <t-swiper width="100%" height="86vh" wx:if="{{imgSrcs.length > 0}}" current="{{current}}" autoplay="{{autoplay}}" duration="{{duration}}" interval="{{interval}}" navigation="{{navigation}}" imageProps="{{swiperImageProps}}" list="{{imgSrcs}}" />
     </view>
 </view>

@@ -1,4 +1,7 @@
-<t-pull-down-refresh id="t-pull-down-refresh" bindrefresh="onPullDownRefresh_" t-class-indicator="t-class-indicator">
+<view wx:if="{{pageLoading}}">
+    <loading-dialog show="{{pageLoading}}" />
+</view>
+<t-pull-down-refresh id="t-pull-down-refresh" bindrefresh="onPullDownRefresh_" t-class-indicator="t-class-indicator" wx:if="{{!pageLoading}}">
     <!-- 页面内容 -->
     <view class="order-detail">
         <view class="header">

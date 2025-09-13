@@ -8,8 +8,8 @@ const ORDER_MODEL_KEY = DATA_MODEL_KEY.ORDER_INFO;
 const ORDER_STATUS_INFO = {
   TO_PAY: { value: '0', label: '待支付' },
   PAID: { value: '1', label: '已支付' },
-  FINISHED: { value: '2', label: '已完成' },
-  CANCELED: { value: '3', label: '已取消' }
+  CANCELED: { value: '2', label: '已取消' },
+  FINISHED: { value: '3', label: '已完成' }
 };
 
 /**
@@ -56,16 +56,15 @@ export async function createOrder({
     routeService,
     remark,
     order_status,
-    total_price
+    total_price,
+    ticket_count,
+    person_count
   }) {
    const orderId =  generateOrderNumber()
    console.log('orderId ' + orderId)
-   console.log('customerList ' + customerList)
-   console.log('route ' + route)
-   console.log('routeService ' + routeService)
-   console.log('remark ' + remark)
-   console.log('total_price ' + total_price)
-   console.log('order_status ' + order_status)
+   console.log('ticket_count ' + ticket_count)
+   console.log('person_count ' + person_count)
+
   return model()[ORDER_MODEL_KEY].create({
       data: {
         order_id: orderId,
@@ -78,7 +77,9 @@ export async function createOrder({
         service_names: [routeService.name],
         service_ids: [routeService.id],
         route_name: route.name,
-        customer_id: [...customerList]
+        customer_id: [...customerList],
+        ticket_count: ticket_count,
+        person_count: person_count
       },
     });
 }
@@ -213,11 +214,11 @@ export async function updateOrderStatus({ orderId, order_status }) {
   }
   return await model()[ORDER_MODEL_KEY].update({
     data: {
-        order_status,
+        order_status: order_status,
     },
     filter: {
       where: {
-        _id: {
+        order_id: {
           $eq: orderId,
         },
       },

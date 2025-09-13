@@ -244,12 +244,15 @@ Page({
   },
 
   gotoBuy(e) {
-    const buyCount = e.detail.count;
+    const ticketCount = e.detail.ticket_count;
+    const personCount = e.detail.person_count;
     const routeServiceId = e.detail.pickedSku._id;
     const routeServiceName = e.detail.pickedSku.service_name;
     const price = e.detail.pickedSku.price;
     wx.navigateTo({
-        url: `/pages/term/registration?${objectToParamString({count: buyCount, 
+        url: `/pages/term/registration?${objectToParamString({
+            ticketCount:ticketCount,
+            personCount:personCount,
             routeServiceId, 
             routeServiceName, 
             routeId:this.data.route._id,

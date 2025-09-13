@@ -29,7 +29,7 @@
     <view class="applicant-form" wx:for="{{applicants}}" wx:for-item="item" wx:for-index="index" wx:key="index">
       <view class="form-header">
         <text class="form-index">第 {{index + 1}} 位报名人</text>
-        <text class="required-mark" wx:if="{{ticketCount > 1}}">可删除</text>
+        <text class="required-mark">可导入(待实现)</text>
       </view>
 
       <!-- 姓名 -->

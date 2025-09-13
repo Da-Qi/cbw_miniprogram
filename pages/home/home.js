@@ -31,6 +31,9 @@ Page({
 
     onShow() {
         this.getTabBar().init();
+        this.setData({
+            isLogin: getApp().globalData.isLogin
+        })
     },
 
     onLoad() {
@@ -44,7 +47,7 @@ Page({
         wx.stopPullDownRefresh();
 
         this.setData({
-            pageLoading: false,
+            pageLoading: true,
         });
         this.loadHomeSwiper();
     },
@@ -56,7 +59,8 @@ Page({
         const handledImages = await getCloudImageTempUrl(images);
 
         this.setData({
-            imgSrcs: handledImages
+            imgSrcs: handledImages,
+            pageLoading: false,
         });
     },
 

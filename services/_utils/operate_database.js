@@ -6,9 +6,7 @@ async function operate_user({
     action,
     userInfo
 }) {
-    console.log(action + ' ' + userInfo)
     if (action === 'add') {
-        console.log(action + ' ' + userInfo)
         return await DB().collection('users').add({
             data: {
                 avatarUrl: userInfo.avatarUrl,
@@ -19,25 +17,20 @@ async function operate_user({
             console.log(res)
         })
     } else if (action === "get") {
-        console.log(action + ' ' + userInfo)
         return await DB().collection('users').where({
             _openid: userInfo.openid // 填入当前用户 openid
         }).get()
     }
 }
 
-async function check_admin({
-    openId
-}) {
+async function check_admin(openid) {
     const res = await DB().collection('admins').where({
         openid
     }).get()
-    return {
-        isAdmin: res.data.length > 0
-    }
+    return res.data.length > 0
 }
 
 
 module.exports = {
-    operate_user
+    operate_user,check_admin
 }

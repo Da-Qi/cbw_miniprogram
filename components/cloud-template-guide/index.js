@@ -1,15 +1,12 @@
 import {
-    cloudbaseTemplateConfig
-} from '../../config/index';
-import {
-    operate_user
+    operate_user,check_admin
 } from '../../services/_utils/operate_database';
 
 Component({
     properties: {},
     data: {
         isLogin: false,
-        userInfo: null
+        userInfo: {}
     },
     lifetimes: {
         attached() {
@@ -22,7 +19,7 @@ Component({
             // 注册回调到全局
             app.globalData.loginListeners.push((isLogin) => {
                 this.setData({
-                    isLogin
+                    isLogin,
                 })
             })
         },
@@ -42,47 +39,39 @@ Component({
                     userInfo: userInfo_tmp,
                     isLogin: true
                 })
-                wx.setStorageSync('userInfo', userInfo_tmp)
-                wx.setStorageSync('isLogin', true)
-                const app = getApp()
-                app.globalData.userInfo = userInfo_tmp
-                app.globalData.isLogin = true
 
                 // 获取Openid
                 const openid_res = await wx.cloud.callFunction({
                     name: 'getOpenid',
                 })
                 if (openid_res != null) {
-                    this.setData({
-                        'userInfo.openid': openid_res.result.openid
-                    })
+                    userInfo_tmp.openid = openid_res.result.openid;
                 }
-                console.log(this.data.userInfo)
+                console.log(userInfo_tmp)
                 // 获取用户
                 const user_res = await operate_user({
                     action: 'get',
-                    userInfo: this.data.userInfo
+                    userInfo: userInfo_tmp
                 })
-                console.log('user_res ' + user_res.data)
                 // 用户不存在，则新增用户，存在，则更新信息
                 if (user_res.data == null || user_res.data == '') {
                     console.log('enter add function')
                     // 用户上传到数据库
                     await operate_user({
                         action: 'add',
-                        userInfo: this.data.userInfo
-                    }).then(res => {
-                        wx.showToast({
-                            title: '保存成功'
-                        })
-                    }).catch(err => {
-                        console.error(err)
-                        wx.showToast({
-                            title: '保存失败',
-                            icon: 'none'
-                        })
+                        userInfo: userInfo_tmp
                     })
                 }
+                const isAdmin  = await check_admin(userInfo_tmp.openid);
+                userInfo_tmp.isAdmin = isAdmin;
+                wx.setStorageSync('userInfo', userInfo_tmp)
+                wx.setStorageSync('isLogin', true)
+                const app = getApp()
+                app.globalData.userInfo = userInfo_tmp
+                app.globalData.isLogin = true
+                wx.reLaunch({
+                    url: '/pages/usercenter/index' // 目标页面路径
+                  });
             } else {
                 wx.showToast({
                     title: '用户拒绝授权',

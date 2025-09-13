@@ -69,16 +69,6 @@ Component({
                 price
             });
         },
-        max: function (max) {
-            const {
-                value
-            } = this.data;
-            if (value > max) {
-                this.setData({
-                    value: max,
-                });
-            }
-        },
         'attrList': function (attrList) {
             const sku = this.pickOnlySku(attrList);
             sku && this.triggerEvent('picked');
@@ -165,13 +155,9 @@ Component({
         addCart() {
             const {
                 pickedSku,
-                max,
                 value
             } = this.properties;
             if (pickedSku == null) {
-                return;
-            }
-            if (value > max) {
                 return;
             }
             if (value < 1) {
@@ -186,13 +172,9 @@ Component({
         buyNow() {
             const {
                 pickedSku,
-                max,
                 value
             } = this.properties;
             if (pickedSku == null) {
-                return;
-            }
-            if (value > max) {
                 return;
             }
             if (value < 1) {
@@ -200,7 +182,8 @@ Component({
             }
             this.triggerEvent('buyNow', {
                 pickedSku,
-                count: value
+                ticket_count: value, // value是购买的票数
+                person_count: value * pickedSku.person_count
             });
         },
 

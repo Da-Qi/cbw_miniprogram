@@ -46,6 +46,7 @@
     <view class="service-header">
       <view class="service-name">服务名称</view>
       <view class="service-price">售价</view>
+      <view class="service-person-count">人数</view>
       <view class="service-action">操作</view>
     </view>
     
@@ -68,6 +69,15 @@
             bindblur="onServicePriceChange"
             data-index="{{index}}"
             placeholder="0.00"
+          />
+        </view>
+        <view class="service-person-count">
+          <input 
+            type="number" 
+            value="{{item.person_count}}" 
+            bindblur="onServicePersonCountChange"
+            data-index="{{index}}"
+            placeholder="1"
           />
         </view>
         <view class="service-action">

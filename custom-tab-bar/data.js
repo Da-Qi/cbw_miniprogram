@@ -11,8 +11,8 @@ export default [
   },
   {
     icon: 'cart',
-    text: '购物车',
-    url: 'pages/cart/index',
+    text: '订单',
+    url: 'pages/order/order-list/index',
   },
   {
     icon: 'person',

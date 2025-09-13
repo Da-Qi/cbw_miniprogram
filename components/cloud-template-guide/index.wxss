@@ -4,7 +4,7 @@
   justify-content: space-between;
   background-color: #f2f3ff;
   margin: 20rpx;
-  padding: 20rpx;
+  padding: 5rpx;
   border-radius: 10rpx;
   font-size: small;
 }
@@ -13,6 +13,7 @@
   gap: 10rpx;
   display: flex;
   align-items: center;
+  white-space: nowrap
 }
 
 .cloud-template-guide .right {
@@ -20,6 +21,7 @@
   color: #0052d9;
   font-size: small;
   width: 55px;
+  white-space: nowrap
 }
 
 .cloud-template-guide-dialog {

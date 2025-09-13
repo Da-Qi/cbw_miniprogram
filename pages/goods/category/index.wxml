@@ -1,3 +1,4 @@
+<cloud-template-guide wx:if="{{!isLogin}}"/>
 <view class="article-card">
   <text class="fixed-top-left">宠伴玩旅行社的公众号</text>
   <view class="left-article">

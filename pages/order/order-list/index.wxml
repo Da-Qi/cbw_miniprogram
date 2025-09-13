@@ -1,4 +1,5 @@
-<view class="page-container">
+<cloud-template-guide wx:if="{{!isLogin}}"/>
+<view class="page-container" wx:if="{{isLogin}}">
   <view class="tab-bar">
     <view class="tab-bar__placeholder" />
     <t-tabs t-class="tab-bar__inner" t-class-active="tab-bar__active" t-class-track="t-tabs-track" bind:change="onTabChange" value="{{status}}" style="position: fixed; top: 0; left: 0; z-index: 100">

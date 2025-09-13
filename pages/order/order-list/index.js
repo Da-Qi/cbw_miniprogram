@@ -74,6 +74,11 @@ Page({
   },
 
   async onShow() {
+    const isLogin = getApp().globalData.isLogin
+    this.setData({
+        isLogin
+    })
+    this.getTabBar().init();
     if (!shouldFresh) return;
     try {
       await this.onRefresh();

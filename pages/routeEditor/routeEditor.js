@@ -20,19 +20,23 @@ Page({
         // 初始服务列表，包含4种默认服务
         services: [{
                 service_name: '1人自驾',
-                price: '199.00'
+                price: '199.00',
+                person_count: 1
             },
             {
                 service_name: '1人大巴',
-                price: '159.00'
+                price: '159.00',
+                person_count: 1
             },
             {
                 service_name: '1人1宠',
-                price: '259.00'
+                price: '259.00',
+                person_count: 1
             },
             {
                 service_name: '2人1宠（送宠物座位）',
-                price: '399.00'
+                price: '399.00',
+                person_count: 2
             }
         ]
     },
@@ -149,6 +153,41 @@ Page({
     },
 
     /**
+     * 修改每个服务每张票服务的人数
+     */
+    onServicePersonCountChange(e) {
+        const index = e.currentTarget.dataset.index;
+        let inputValue = e.detail.value;  // 获取最终输入值
+        // 1. 校验逻辑（在用户输入完成后执行）
+        let validatedValue = "1";  // 默认值
+        if (inputValue) {
+            // 正则表达式：匹配正整数（不允许0和负数）
+            const reg = /^[1-9]\d*$/;
+            // 只保留数字
+            const numValue = inputValue.replace(/[^\d]/g, '');
+            // 校验是否为正整数
+            const isValid = reg.test(numValue);
+          // 校验是否为有效数字
+          if (isValid) {
+            // 格式化为两位小数
+            validatedValue = parseInt(numValue);
+          } else {
+            // 无效输入时给出提示
+            wx.showToast({
+              title: '请输入有效正整数',
+              icon: 'none',
+              duration: 1500
+            });
+          }
+        }
+        // 2. 更新数据
+        const services = [...this.data.services];
+        services[index].person_count = validatedValue;
+        console.log("validatedValue "+ validatedValue);
+        this.setData({ services });
+    },
+
+    /**
      * 新增服务
      */
     addService() {
@@ -254,7 +293,7 @@ Page({
                     _id: createRouteData.data.id
                 }
             })
-
+            console.log(routeServicesData)
             await createRouteServices({
                 serviceArray: routeServicesData
             })

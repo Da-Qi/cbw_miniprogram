@@ -73,10 +73,9 @@ Component({
 
     async onCancel(order) {
       if (!this.checkOrder(order, OPERATION_TYPE.CANCEL)) return;
-
       // if order is paid, we should first refund
       if (order.order_status !== ORDER_STATUS.TO_PAY) {
-        try {
+      try {
           await refund(order._id);
         } catch (e) {
           this.triggerEvent(OPERATION_DONE_EVENT, {
@@ -90,7 +89,7 @@ Component({
       }
 
       try {
-        await updateOrderStatus({ orderId: order._id, order_status: ORDER_STATUS.CANCELED });
+        await updateOrderStatus({ orderId: order.order_id, order_status: ORDER_STATUS.CANCELED });
       } catch (e) {
         this.triggerEvent(OPERATION_DONE_EVENT, {
           type: OPERATION_TYPE.CANCEL,
@@ -148,9 +147,9 @@ Component({
       if (!this.checkOrder(order, OPERATION_TYPE.PAY)) return;
 
       try {
-        await pay({ id: order._id, totalPrice: order.totalPrice });
+        // await pay({ id: order._id, totalPrice: order.totalPrice });
         try {
-          await updateOrderStatus({ orderId: order._id, order_status: ORDER_STATUS.TO_SEND });
+          await updateOrderStatus({ orderId: order._id, order_status: ORDER_STATUS.PAID });
         } catch (e) {
           console.error(e);
           this.triggerEvent(OPERATION_DONE_EVENT, {
@@ -203,29 +202,11 @@ Component({
         });
         return;
       }
-      if (order.order_status === ORDER_STATUS.TO_SEND) {
-        this.setData({
-          buttons: {
-            left: [],
-            right: [{ type: OrderButtonTypes.CANCEL, name: '取消订单' }],
-          },
-        });
-        return;
-      }
-      if (order.order_status === ORDER_STATUS.TO_RECEIVE) {
-        this.setData({
-          buttons: {
-            left: [],
-            right: [{ type: OrderButtonTypes.CONFIRM, name: '确认收货', primary: true }],
-          },
-        });
-        return;
-      }
       if (order.order_status === ORDER_STATUS.FINISHED) {
         this.setData({
           buttons: {
             left: [],
-            right: [{ type: OrderButtonTypes.COMMENT, name: '评价', primary: true }],
+            right: [],
           },
         });
         return;

@@ -3,7 +3,8 @@ import{createOrder} from '../../services/order/order'
 Page({
     data: {
         // 行程信息（从上个页面传递过来）
-        count: 1,
+        ticketCount: 1,
+        personCount: 1,
         // 是否同意条款
         isAgreed: false,
         showTerm: true,
@@ -115,9 +116,11 @@ Page({
 
     onLoad(options) {
         // 获取从订单页面传递的行程信息
-        const count = JSON.parse(options.count);
+        const ticketCount = JSON.parse(options.ticketCount);
+        const personCount = JSON.parse(options.personCount);
         this.setData({
-            count,
+            ticketCount,
+            personCount,
             idTypes: IdType.list,
             route: {
                 name: options.routeName,
@@ -128,17 +131,17 @@ Page({
                 price: options.price,
                 id: options.routeServiceId
             },
-            total_price: Number(Math.round(options.price * count * 100) / 100).toFixed(2)
+            total_price: Number(Math.round(options.price * ticketCount * 100) / 100).toFixed(2)
         });
         // 根据购票数量更新报名人列表
         const initApplicantsList = () => {
             const {
-                count
+                personCount
             } = this.data;
             const newApplicants = [];
 
             // 数量增加时，新增空白报名人
-            for (let i = newApplicants.length; i < count; i++) {
+            for (let i = newApplicants.length; i < personCount; i++) {
                 newApplicants.push({
                     name: "",
                     phone: "",
@@ -270,7 +273,9 @@ Page({
             applicants: applicants,
             remark: this.data.remark,
             order_status: 0,
-            total_price: this.data.total_price
+            total_price: this.data.total_price,
+            ticket_count: this.data.ticketCount,
+            person_count: this.data.personCount
         })
         wx.hideLoading();
         wx.showToast({

@@ -51,8 +51,8 @@
         "text": "路线"
       },
       {
-        "pagePath": "pages/cart/index",
-        "text": "购物车"
+        "pagePath": "pages/order/order-list/index",
+        "text": "订单"
       },
       {
         "pagePath": "pages/usercenter/index",

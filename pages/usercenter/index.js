@@ -58,15 +58,13 @@ const orderTagInfos = [{
 ];
 
 const getDefaultData = () => ({
-    showMakePhone: false,
-    userInfo: {
-        avatarUrl: '',
-        nickName: '正在登录...',
-        phoneNumber: '',
-    },
+    userInfo: {},
     menuData,
     orderTagInfos,
-    customerServiceInfo: {},
+    customerServiceInfo: {
+        servicePhone: '1867287942',
+        serviceTimeDuration: '上午9:00 - 下午21:00'
+    },
     currAuthStep: 1,
     showKefu: true,
     versionNo: '',
@@ -83,6 +81,10 @@ Page({
     },
 
     onShow() {
+        const isLogin = getApp().globalData.isLogin
+        this.setData({
+            isLogin
+        })
         this.getTabBar().init();
         this.init();
     },
@@ -91,46 +93,15 @@ Page({
     },
 
     init() {
-        this.fetUseriInfoHandle();
-        this.initOrderCount();
-    },
-
-    async initOrderCount() {
-        const [pay, send, receive] = await Promise.all([
-            getToPayOrderCount(),
-            getToSendOrderCount(),
-            getToReceiveOrderCount(),
-        ]);
-        this.setData({
-            'orderTagInfos[0].orderNum': pay,
-            'orderTagInfos[1].orderNum': send,
-            'orderTagInfos[2].orderNum': receive,
-        });
-    },
-
-    fetUseriInfoHandle() {
-        fetchUserCenter().then(({
-            userInfo,
-            countsData,
-            customerServiceInfo
-        }) => {
-            // eslint-disable-next-line no-unused-expressions
-            menuData?.[0].forEach((v) => {
-                countsData.forEach((counts) => {
-                    if (counts.type === v.type) {
-                        // eslint-disable-next-line no-param-reassign
-                        v.tit = counts.num;
-                    }
-                });
-            });
+        const isLogin = getApp().globalData.isLogin
+        if (isLogin) {
+            const userInfo = getApp().globalData.userInfo;
+            console.log(userInfo)
             this.setData({
-                userInfo,
-                menuData,
-                customerServiceInfo,
-                currAuthStep: 2,
-            });
-            wx.stopPullDownRefresh();
-        });
+                userInfo: userInfo,
+                currAuthStep:2
+            })
+        }
     },
 
     onClickCell({
@@ -210,35 +181,10 @@ Page({
         });
     },
 
-    openMakePhone() {
-        this.setData({
-            showMakePhone: true
-        });
-    },
-
-    closeMakePhone() {
-        this.setData({
-            showMakePhone: false
-        });
-    },
-
     call() {
         wx.makePhoneCall({
             phoneNumber: this.data.customerServiceInfo.servicePhone,
         });
-    },
-
-    gotoUserEditPage() {
-        const {
-            currAuthStep
-        } = this.data;
-        if (currAuthStep === 2) {
-            wx.navigateTo({
-                url: '/pages/usercenter/person-info/index'
-            });
-        } else {
-            this.fetUseriInfoHandle();
-        }
     },
 
     getVersionInfo() {

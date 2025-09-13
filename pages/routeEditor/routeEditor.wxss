@@ -63,6 +63,13 @@
     color: #666;
     text-align: center;
   }
+
+  .service-person-count{
+    flex: 1;
+    font-size: 28rpx;
+    color: #666;
+    text-align: center;
+  }
   
   /* 服务操作列样式 */
   .service-action {

@@ -18,7 +18,7 @@ Page({
 
     routeListPagination: {
         index: 1,
-        num: 3,
+        num: 4,
     },
     async init() {
         this.loadRouteList();
@@ -37,10 +37,14 @@ Page({
     onPullDownRefresh() {
         console.log('触发了下拉刷新')
         // 调用接口加载最新数据
-        this.loadRouteList(true);
+        this.loadRouteList(false);
         wx.stopPullDownRefresh();
     },
     onShow() {
+        const isLogin = getApp().globalData.isLogin
+        this.setData({
+            isLogin
+        })
         this.getTabBar().init();
         if (getApp().globalData.needRefreshRoute) {
             this.loadRouteList(true) // 重新拉取数据
