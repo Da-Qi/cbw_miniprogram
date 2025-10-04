@@ -1,0 +1,117 @@
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="title">路线管理</text>
+    <button class="add-btn" bindtap="handleAddRoute">
+      <i class="icon-add"></i> 新增路线
+    </button>
+  </view>
+
+  <!-- 路线列表 -->
+  <view class="route-list">
+
+    <!-- 路线项 -->
+    <view wx:for="{{routes}}" wx:key="_id" class="route-item">
+      <view class="route-info">
+        <text class="route-name">{{item.name}}</text>
+        <text class="route-desc">{{item.description}}</text>
+        <view class="route-meta">
+          <text class="meta-item status-{{item.status}}">{{item.status ? '启用' : '禁用'}}</text>
+        </view>
+      </view>
+      <view class="route-actions">
+        <button class="action-btn edit-btn" bindtap="handleEditRoute" data-id="{{item._id}}">编辑</button>
+        <button class="action-btn delete-btn" bindtap="handleDeleteRoute" data-id="{{item._id}}">删除</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新增/编辑路线弹窗 -->
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="closeModal"></view>
+  <view class="modal-container" wx:if="{{showModal}}">
+    <view class="modal-content" bindtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">{{isEditing ? '编辑路线' : '新增路线'}}</text>
+        <button class="modal-close" bindtap="closeModal">×</button>
+      </view>
+      
+      <view class="modal-body">
+        <view class="form-group">
+          <text class="form-label">路线名称 *</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入路线名称" 
+            value="{{formData.name}}"
+            bindinput="handleInputChange"
+            data-field="name"
+          />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">路线描述</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="请输入路线描述" 
+            value="{{formData.description}}"
+            bindinput="handleInputChange"
+            data-field="description"
+          ></textarea>
+        </view>
+        
+        <view class="form-row">
+          <view class="form-group half">
+            <text class="form-label">天数 *</text>
+            <input 
+              class="form-input" 
+              type="number" 
+              placeholder="请输入天数" 
+              value="{{formData.days}}"
+              bindinput="handleInputChange"
+              data-field="days"
+            />
+          </view>
+          
+          <view class="form-group half">
+            <text class="form-label">价格 *</text>
+            <input 
+              class="form-input" 
+              type="number" 
+              placeholder="请输入价格" 
+              value="{{formData.price}}"
+              bindinput="handleInputChange"
+              data-field="price"
+            />
+          </view>
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">状态</text>
+          <view class="radio-group">
+            <label class="radio-item">
+              <radio value="active" checked="{{formData.status === 'active'}}" bindchange="handleStatusChange"/> 启用
+            </label>
+            <label class="radio-item">
+              <radio value="inactive" checked="{{formData.status === 'inactive'}}" bindchange="handleStatusChange"/> 禁用
+            </label>
+          </view>
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="modal-btn cancel-btn" bindtap="closeModal">取消</button>
+        <button class="modal-btn confirm-btn" bindtap="submitForm">{{isEditing ? '更新' : '创建'}}</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 确认删除弹窗 -->
+  <view class="modal-mask" wx:if="{{showDeleteConfirm}}" bindtap="closeDeleteConfirm"></view>
+  <view class="confirm-modal" wx:if="{{showDeleteConfirm}}">
+    <text class="confirm-title">确认删除</text>
+    <text class="confirm-content">您确定要删除这条路线吗？此操作不可撤销。</text>
+    <view class="confirm-buttons">
+      <button class="confirm-btn cancel" bindtap="closeDeleteConfirm">取消</button>
+      <button class="confirm-btn delete" bindtap="confirmDelete">删除</button>
+    </view>
+  </view>
+</view>

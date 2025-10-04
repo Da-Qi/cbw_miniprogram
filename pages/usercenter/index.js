@@ -218,5 +218,9 @@ Page({
 
     addRoute() {
         wx.navigateTo({ url: '/pages/routeEditor/routeEditor' })
+    },
+
+    manageRoute() {
+        wx.navigateTo({ url: '/pages/routeEditor/route-management/index' })
     }
 });

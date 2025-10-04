@@ -155,8 +155,8 @@ page {
     background-color: #ff4d4f;
     color: #fff;
     border-radius: 8rpx;
-    padding: 20rpx;
-    width: 300rpx;
+    width: 200rpx;
+    height: 100rpx;
   }
 
   .add-route-btn {

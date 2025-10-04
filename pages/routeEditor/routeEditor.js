@@ -3,13 +3,18 @@ import {
 } from '../../services/_utils/images';
 import {
     createRoute,
-    createRouteServices
+    createRouteServices,
+    getRoute
 } from '../../services/route/route';
+import {
+    getAllRouteServices
+} from '../../services/route_service/route_service';
 Page({
     /**
      * 页面的初始数据
      */
     data: {
+        isEditing:false,
         route: {
             title: '',
             carousel: [], // 轮播图数组
@@ -46,15 +51,29 @@ Page({
      */
     onLoad(options) {
         const {
-            id
+            route_id
         } = options
-        if (id) {
-            this.setData({
-                productId: id
-            })
-            wx.cloud.database().collection('products').doc(id).get()
-                .then(res => this.setData(res.data))
+        if (route_id) {
+            this.setData({isEditing: true})
+            this.init(route_id)
         }
+    },
+    
+    async init(route_id){
+        const routeFromDb = await getRoute(route_id)
+        this.setData({
+            route: {
+                title: routeFromDb.name,
+                carousel: routeFromDb.swiper_images,
+                detailImages: routeFromDb.detail,
+                active: routeFromDb.status,
+                priority: routeFromDb.priority
+            }
+        })
+        const routeServicesFromDb = await getAllRouteServices(route_id)
+        this.setData({
+            services: routeServicesFromDb
+        })
     },
 
     onTitleChange(e) {
@@ -318,5 +337,8 @@ Page({
         }
     },
 
+    closeBack() {
+        wx.navigateBack()
+    }
 
 })

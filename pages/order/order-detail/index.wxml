@@ -9,7 +9,7 @@
                 <t-icon name="location" size="40rpx" class="logistics-icon" prefix="wr" />
                 <view class="logistics-content">
                     <view>活动：{{order.route_name}}</view>
-                    <view class="logistics-time">服务：{{order.route_service.service_name}}</view>
+                    <view class="logistics-time">服务：{{order.service_names[0]}}</view>
                     <view class="logistics-time">票数：{{order.customer_id.length}}张</view>
                     <view class="logistics-time">订单备注: {{order.	customer_notes}}</view>
                 </view>

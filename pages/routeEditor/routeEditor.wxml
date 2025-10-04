@@ -101,5 +101,8 @@
   </view>
 
   <!-- 保存按钮 -->
-  <button bindtap="saveRoute">保存路线</button>
+    <view class="modal-footer">
+        <button class="modal-btn cancel-btn" bindtap="closeBack">取消</button>
+        <button class="modal-btn confirm-btn" bindtap="saveRoute">{{isEditing ? '更新' : '创建'}}</button>
+    </view>
 </view>

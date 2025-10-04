@@ -138,3 +138,13 @@ export async function getRoute(routeId) {
       route.swiper_images[index] = image;
     });
   }
+
+export async function removeRoute(routeId) {
+    return (
+        await model()[ROUTE_MODEL_KEY].delete({
+          filter: {
+            where: { _id: { $eq: routeId } },
+          },
+        })
+      ).data;
+}

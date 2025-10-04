@@ -2,9 +2,8 @@ import Toast from 'tdesign-miniprogram/toast/index';
 import dayjs from 'dayjs';
 import { orderListShouldFresh } from '../../../utils/orderListFresh';
 import { OrderStatus } from '../config';
-import { getOrder, orderStatusToName, ORDER_STATUS, updateOrderDeliveryInfo } from '../../../services/order/order';
+import { getOrder, orderStatusToName, ORDER_STATUS } from '../../../services/order/order';
 import { listCustomerInfo,getIdTypeText } from '../../../services/order/customerInfo';
-import { getRouteService } from '../../../services/route_service/route_service';
 import { fetchBusinessTime } from '../../../services/order/orderDetail';
 import { OPERATION_TYPE } from '../../../utils/orderOperation';
 
@@ -102,8 +101,6 @@ Page({
     order.isPaid = order.order_status === ORDER_STATUS.PAID ||  order.order_status === ORDER_STATUS.FINISHED;
     console.log('order.isPaid ' + order.isPaid);
     order.createdTimeString = dayjs(new Date(order.createdAt)).format('YYYY-MM-DD HH:mm:ss');
-    const route_service_id = order.service_ids[0];
-    order.route_service = await getRouteService(route_service_id);
     const customer_info = (await listCustomerInfo(order.customer_id)).records;
     customer_info.forEach(element => {
         element.showBirthday = [1, 2, 3, 4, 5].includes(Number(element.id_type));

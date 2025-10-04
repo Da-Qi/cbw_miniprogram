@@ -18,8 +18,10 @@
       在线客服
     </button>
     <view class="popup-close" bind:tap="addRoute" wx:if="{{userInfo.isAdmin}}">仅限管理员：新增路线</view>
+    <!-- Todo <view class="popup-close" bind:tap="deleteRoute" wx:if="{{userInfo.isAdmin}}">仅限管理员：删除路线</view> -->
+    <view class="popup-close" bind:tap="manageRoute">仅限管理员：管理路线</view>
   </view>
-<view class="container">
+<view class="container" wx:if="{{isLogin}}">
   <button class="logout-btn" bindtap="onLogout">退出登录</button>
 </view>
 <t-toast id="t-toast" />

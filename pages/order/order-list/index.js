@@ -100,12 +100,9 @@ Page({
       const route = await getRoute(route_id);
       order.route = []
       const orderImage =  await getSingleCloudImageTempUrl(route.swiper_images[0])
-      order.route.route_service = {}
-      const route_service = await getRouteService(order.service_ids[0])
       order.route.push({
         image: orderImage,
         name: route.name,
-        route_service: route_service,
         count: order.customer_id.length
     })
     } catch (e) {
