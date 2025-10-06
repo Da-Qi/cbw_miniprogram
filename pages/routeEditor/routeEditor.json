@@ -1,3 +1,8 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "t-switch": "tdesign-miniprogram/switch/switch",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-upload": "tdesign-miniprogram/upload/upload",
+    "t-input": "tdesign-miniprogram/input/input"
+  }
 }

@@ -33,7 +33,8 @@
     "pages/webview/webview",
     "pages/testpage/testpage",
     "pages/routeEditor/routeEditor",
-    "pages/term/registration"
+    "pages/term/registration",
+    "pages/routeEditor/route-management/index"
   ],
   "tabBar": {
     "custom": true,

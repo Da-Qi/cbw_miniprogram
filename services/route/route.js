@@ -26,7 +26,8 @@ export async function createRoute({
     priority,
     swiper_images,
     detail,
-    status
+    status,
+    poster_image
 }) {
     return model()[ROUTE_MODEL_KEY].create({
         data: {
@@ -34,7 +35,8 @@ export async function createRoute({
             priority,
             swiper_images,
             detail,
-            status
+            status,
+            poster_image
         },
     });
 }

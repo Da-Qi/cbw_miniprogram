@@ -9,7 +9,7 @@ async function uploadMultiImages(cloudDir, images) {
         const uploadPromise = new Promise((resolve) => {
             wx.cloud.uploadFile({
                 cloudPath: cloudPath,
-                filePath: image,
+                filePath: image.url,
                 success: (res) => {
                     console.log(`第${index+1}张上传成功`, res.fileID);
                     resolve(res.fileID); // 成功则返回fileID

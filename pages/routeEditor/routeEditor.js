@@ -17,10 +17,11 @@ Page({
         isEditing:false,
         route: {
             title: '',
+            poster_image: [],
             carousel: [], // 轮播图数组
             detailImages: [], // 描述详情图数组
             active: true, // 是否可用
-            priority: 0 // 展示优先级
+            priority: null // 展示优先级
         },
         // 初始服务列表，包含4种默认服务
         services: [{
@@ -82,36 +83,60 @@ Page({
         })
     },
 
-    addCarouselImage() {
-        wx.chooseMedia({
-            count: 5,
-            success: (res) => {
-                const tmpCarousels = [];
-                res.tempFiles.forEach((tempFile, index) => {
-                    tmpCarousels.push(tempFile.tempFilePath)
-                })
-                this.setData({
-                    'route.carousel': tmpCarousels
-                })
-                console.log(this.data.route.carousel)
-            }
-        })
+    handleAddPosterImage(e) {
+            const {
+                files
+            } = e.detail;
+            this.setData({
+                'route.poster_image': files, // 此时设置了 fileList 之后才会展示选择的图片
+            });
+        },
+
+    handleRemovePosterImage(e) {
+        const { index } = e.detail;
+        const poster_image = this.data.route.poster_image;
+
+        poster_image.splice(index, 1);
+        this.setData({
+            'route.poster_image': poster_image
+        });
+    },
+    handleAddCarouselImage(e) {
+        const carouselImages = this.data.route.carousel;
+        const { files } = e.detail;
+
+        // 方法1：选择完所有图片之后，统一上传，因此选择完就直接展示
+        this.setData({
+            'route.carousel': [...carouselImages, ...files], // 此时设置了 fileList 之后才会展示选择的图片
+        });
+    },
+    handleRemoveCarouselImage(e) {
+        const { index } = e.detail;
+        const carouselImages = this.data.route.carousel;
+
+        carouselImages.splice(index, 1);
+        this.setData({
+            'route.carousel': carouselImages
+        });
     },
 
-    addDetailImage() {
-        wx.chooseMedia({
-            count: 10,
-            success: (res) => {
-                const tmpDetailImages = [];
-                res.tempFiles.forEach((tempFile, index) => {
-                    tmpDetailImages.push(tempFile.tempFilePath)
-                })
-                this.setData({
-                    'route.detailImages': tmpDetailImages
-                })
-                console.log(this.data.route.detailImages)
-            }
-        })
+    handleAddDetailImage(e) {
+        const {
+            files
+        } = e.detail;
+        this.setData({
+            'route.detailImages': files, // 此时设置了 fileList 之后才会展示选择的图片
+        });
+    },
+
+    handleRemoveDetailImage(e) {
+        const { index } = e.detail;
+        const carouselImages = this.data.route.detailImages;
+
+        carouselImages.splice(index, 1);
+        this.setData({
+            'route.detailImages': carouselImages
+        });
     },
 
     onActiveChange(e) {
@@ -290,6 +315,7 @@ Page({
         });
 
         try {
+            const posterImagesFileID = await uploadMultiImages('route_poster', routeData.poster_image)
             const carouselFileIDs = await uploadMultiImages('route_carousel', routeData.carousel)
             const detailImagesFileIDs = await uploadMultiImages('route_detail', routeData.detailImages)
             console.log('上传成功，carouselFileIDs列表:', carouselFileIDs);
@@ -301,7 +327,8 @@ Page({
                 priority: routeData.priority,
                 swiper_images: carouselFileIDs,
                 detail: detailImagesFileIDs,
-                status: routeData.active
+                status: routeData.active,
+                poster_image: posterImagesFileID[0]
             })
             console.log('createRouteData ' + createRouteData.data.id)
 
