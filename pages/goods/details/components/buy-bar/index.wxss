@@ -19,6 +19,18 @@
   width: 100%;
 }
 
+/* 隐藏原生按钮，但保留其可点击区域 */
+.native-contact-btn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* 透明化 */
+    padding: 0;
+    margin: 0;
+  }
+
 .bottom-operate-left .icon-warp {
   width: 50%;
 }

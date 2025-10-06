@@ -19,14 +19,7 @@ Page({
         navigation: {
             type: 'dots'
         },
-        swiperImageProps: {
-            mode: 'scaleToFill'
-        },
         userInfo: {}
-    },
-
-    privateData: {
-        tabIndex: 0,
     },
 
     onShow() {
@@ -53,9 +46,11 @@ Page({
     },
 
     async loadHomeSwiper() {
-        const {
-            images
-        } = await getHomeSwiper();
+        // 选取使能的、前三高优先级的路线的海报图
+        const top3Posters = await getHomeSwiper();
+        console.log(top3Posters)
+        this.setData({top3Posters})
+        const images = top3Posters.map(poster => poster.image);
         const handledImages = await getCloudImageTempUrl(images);
 
         this.setData({
@@ -63,21 +58,22 @@ Page({
             pageLoading: false,
         });
     },
-
-    navToSearchPage() {
+    onSwiperClick(e) {
+        // 校验客户是否登录
+        if (!this.data.isLogin) {
+            this.setData({showLoginConfirm: true})
+            return;
+        }
+        const index =  e.detail.index;
+        console.log(index)
+        console.log(this.data.top3Posters[index])
+        // 根据索引从 top3Routes 中找到对应的路线 id
+        const routeId = this.data.top3Posters[index]._id;
+        
+        // 输出或使用 id（例如跳转页面、展示详情等）
+        console.log('当前点击的路线 id 是：', routeId);
         wx.navigateTo({
-            url: '/pages/goods/search/index'
-        });
-    },
-
-    navToActivityDetail({
-        detail
-    }) {
-        const {
-            index: promotionID = 0
-        } = detail || {};
-        wx.navigateTo({
-            url: `/pages/promotion-detail/index?promotion_id=${promotionID}`,
+            url: `/pages/goods/details/index?routeId=${routeId}`,
         });
     }
 });

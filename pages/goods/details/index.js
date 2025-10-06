@@ -62,16 +62,10 @@ Page({
     details: [],
     jumpArray: [
       {
-        title: '首页',
-        url: '/pages/home/home',
-        iconName: 'home',
-      },
-      {
-        title: '购物车',
-        url: '/pages/cart/index',
-        iconName: 'cart',
-        showCartNum: true,
-      },
+        title: '客服',
+        url: '',
+        iconName: 'chat-bubble-smile',
+      }
     ],
     isStock: true,
     cartNum: 0,
@@ -136,9 +130,11 @@ Page({
 
   toNav(e) {
     const { url } = e.detail;
-    wx.switchTab({
-      url: url,
-    });
+    if (url) {
+        wx.switchTab({
+            url: url,
+        });
+    }
   },
 
   showCurImg(e) {

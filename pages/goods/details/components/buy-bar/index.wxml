@@ -12,13 +12,15 @@
 		  data-index="{{index}}"
 		  data-url="{{item.url}}"
 		>
-			<view>
-				<text wx:if="{{shopCartNum > 0 && item.showCartNum}}" class="tag-cart-num">
-					{{shopCartNum > 99 ? '99+' : shopCartNum}}
-				</text>
-				<t-icon prefix="wr" name="{{item.iconName}}" size="40rpx" />
+			<view wx:if="{{item.title !== '客服'}}">
+				<t-icon name="{{item.iconName}}" size="40rpx" />
 				<view class="operate-text">{{item.title}}</view>
 			</view>
+            <view wx:else="">
+                <button open-type="contact" class="native-contact-btn"></button>
+                <t-icon name="{{item.iconName}}" size="40rpx" />
+				<view class="operate-text">{{item.title}}</view>
+            </view>
 		</view>
 	</view>
 	<block wx:if="{{buttonType === 1}}">

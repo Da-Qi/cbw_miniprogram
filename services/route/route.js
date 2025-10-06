@@ -57,15 +57,6 @@ export async function listRoutes({
     pageNumber,
     search
 }) {
-    // if (cloudbaseTemplateConfig.useMock) {
-    //   const records = search ? ROUTE_MOCK.filter((x) => x.name.includes(search)) : ROUTE_MOCK;
-    //   const startIndex = (pageNumber - 1) * pageSize;
-    //   const endIndex = startIndex + pageSize;
-    //   return {
-    //     records: records.slice(startIndex, endIndex),
-    //     total: records.length,
-    //   };
-    // }
     const filter = {
         where: {
             status: {
