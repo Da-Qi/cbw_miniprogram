@@ -1,6 +1,6 @@
 import Dialog from 'tdesign-miniprogram/dialog/index';
 import { ORDER_STATUS, updateOrderStatus } from '../../../../services/order/order';
-import { pay, refund } from '../../../../services/pay/pay';
+import { pay, refund, closeOrder } from '../../../../services/pay/pay';
 import { OrderButtonTypes } from '../../config';
 import { objectToParamString } from '../../../../utils/util';
 import { OPERATION_TYPE } from '../../../../utils/orderOperation';
@@ -89,7 +89,7 @@ Component({
       }
 
       try {
-        await updateOrderStatus({ orderId: order.order_id, order_status: ORDER_STATUS.CANCELED });
+        await updateOrderStatus({ order_id: order.order_id, order_status: ORDER_STATUS.CANCELED });
       } catch (e) {
         this.triggerEvent(OPERATION_DONE_EVENT, {
           type: OPERATION_TYPE.CANCEL,
@@ -127,7 +127,7 @@ Component({
       }
 
       try {
-        await updateOrderStatus({ orderId: order._id, order_status: ORDER_STATUS.FINISHED });
+        await updateOrderStatus({ order_id: order.order_id, order_status: ORDER_STATUS.FINISHED });
       } catch (e) {
         this.triggerEvent(OPERATION_DONE_EVENT, {
           type: OPERATION_TYPE.CONFIRM,
@@ -144,22 +144,50 @@ Component({
     },
 
     async onPay(order) {
+        console.log(order)
       if (!this.checkOrder(order, OPERATION_TYPE.PAY)) return;
 
       try {
-        // await pay({ id: order._id, totalPrice: order.totalPrice });
-        try {
-          await updateOrderStatus({ orderId: order._id, order_status: ORDER_STATUS.PAID });
-        } catch (e) {
-          console.error(e);
-          this.triggerEvent(OPERATION_DONE_EVENT, {
-            type: OPERATION_TYPE.PAY,
-            message: 'pay failed',
-            success: false,
-            detail: e,
-          });
-          return;
-        }
+        pay({
+            order_id: order.order_id,
+            total_price: order.total_price
+        }).then(paymentData => {
+            console.log(paymentData)
+            const that = this
+            // 唤起微信支付组件，完成支付
+            try {
+                wx.requestPayment({
+                    timeStamp: paymentData?.timeStamp,
+                    nonceStr: paymentData?.nonceStr,
+                    package: paymentData?.package,
+                    paySign: paymentData?.paySign,
+                    signType: paymentData?.signType, // 该参数为固定值
+                    success (res) {
+                        updateOrderStatus({ order_id: order.order_id, order_status: ORDER_STATUS.PAID });
+                        that.triggerEvent(OPERATION_DONE_EVENT, {
+                            type: OPERATION_TYPE.PAY,
+                            success: true,
+                        });
+                    },
+                    fail (err) {
+                        console.log(err)
+                        that.triggerEvent(OPERATION_DONE_EVENT, {
+                            type: OPERATION_TYPE.PAY,
+                            message: 'pay failed',
+                            success: false,
+                            detail: err,
+                        });
+                    }
+                });
+            } catch (e) {
+                this.triggerEvent(OPERATION_DONE_EVENT, {
+                    type: OPERATION_TYPE.PAY,
+                    message: 'pay failed',
+                    success: false,
+                    detail: "取消支付",
+                });
+            }
+        })
       } catch (e) {
         this.triggerEvent(OPERATION_DONE_EVENT, {
           type: OPERATION_TYPE.PAY,
@@ -169,11 +197,6 @@ Component({
         });
         return;
       }
-
-      this.triggerEvent(OPERATION_DONE_EVENT, {
-        type: OPERATION_TYPE.PAY,
-        success: true,
-      });
     },
 
     onApplyRefund(order) {

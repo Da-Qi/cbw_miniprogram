@@ -1,3 +1,16 @@
+export async function closeOrder({
+    order_id,
+    nonce_str
+}) {
+    await wx.cloud.callFunction({
+        name: 'close_order',
+        data: {
+          order_id: order_id,
+          nonce_str: nonce_str
+        },
+    });
+}
+
 /**
  *
  * @param {{id: String, totalPrice: Number}} order
@@ -6,25 +19,15 @@
 export async function pay(order) {
   try {
     const res = await wx.cloud.callFunction({
-      // 云函数名称
-      name: 'shop_pay',
+      name: 'pre_pay',
       data: {
-        orderId: order.id
+        order_id: order.order_id,
+        body: '宠伴玩旅行社-协宠游玩',
+        total_price: order.total_price
       },
     });
-    const paymentData = res.result?.data;
-    // 唤起微信支付组件，完成支付
-    try {
-      await wx.requestPayment({
-        timeStamp: paymentData?.timeStamp,
-        nonceStr: paymentData?.nonceStr,
-        package: paymentData?.packageVal,
-        paySign: paymentData?.paySign,
-        signType: 'RSA', // 该参数为固定值
-      });
-    } catch (e) {
-      return Promise.reject(e);
-    }
+    const paymentData = res.result.payment;
+    return Promise.resolve(paymentData);
   } catch (e) {
     return Promise.reject(e);
   }

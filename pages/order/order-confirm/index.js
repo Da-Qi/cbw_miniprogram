@@ -6,7 +6,6 @@ import { getSkuDetail, updateSku } from '../../../services/sku/sku';
 import { getAddressPromise } from '../../usercenter/address/list/util';
 import { getSingleCloudImageTempUrl } from '../../../utils/cloudImageHandler';
 import { cartShouldFresh } from '../../../utils/cartFresh';
-import { pay } from '../../../services/pay/pay';
 
 const stripeImg = `https://cdn-we-retail.ym.tencent.com/miniapp/order/stripe.png`;
 
@@ -201,24 +200,7 @@ Page({
     });
   },
 
-  async payImpl(totalPrice, orderId) {
-    try {
-      await pay({ id: orderId, totalPrice });
-      try {
-        await updateOrderStatus({ orderId, status: ORDER_STATUS.TO_SEND });
-        this.toast('支付成功');
-      } catch (e) {
-        console.error(e);
-        this.toast('支付成功，但订单状态更新失败');
-      } finally {
-        setTimeout(() => {
-          wx.navigateBack();
-        }, 1000);
-      }
-    } catch (e) {
-      this.failedAndBack('支付失败', e);
-    }
-  },
+
 
   async submitOrderFromCart() {
     /**

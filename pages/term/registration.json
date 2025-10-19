@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "报名条款",
   "usingComponents": {
-    "price": "/components/price/index"
+    "price": "/components/price/index",
+    "t-toast": "tdesign-miniprogram/toast/toast"
   }
 }

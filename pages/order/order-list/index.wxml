@@ -24,12 +24,12 @@
         <order-button-bar bindoperation="onOperation" order="{{order}}" bindrefresh="onRefresh" data-order="{{order}}" />
       </view>
     </order-card>
-    <!-- 列表加载中/已全部加载 -->
+      <!-- 列表加载中/已全部加载 -->
     <load-more list-is-empty="{{!orderList.length}}" status="{{listLoading}}" bindretry="onReTryLoad">
-      <!-- 空态 -->
-      <view slot="empty" class="empty-wrapper">
-        <t-empty t-class="t-empty-text" src="{{emptyImg}}">暂无相关订单</t-empty>
-      </view>
+        <!-- 空态 -->
+        <view slot="empty" class="empty-wrapper">
+            <t-empty t-class="t-empty-text" src="{{emptyImg}}">暂无相关订单</t-empty>
+        </view>
     </load-more>
   </t-pull-down-refresh>
 </view>

@@ -1,10 +1,12 @@
+import Toast from 'tdesign-miniprogram/toast/index';
 import {
     createCustomers,
     IdType
 } from '../../services/order/customerInfo'
 import {
-    createOrder
+    createOrder,ORDER_STATUS, updateOrderStatus
 } from '../../services/order/order'
+import { pay,closeOrder } from '../../services/pay/pay';
 Page({
     data: {
         // 行程信息（从上个页面传递过来）
@@ -36,6 +38,15 @@ Page({
             locationId: null, // 选中的集合地点ID
         }],
         remark: ''
+    },
+    toast(message) {
+        Toast({
+          context: this,
+          selector: '#t-toast',
+          message,
+          duration: 1000,
+          icon: '',
+        });
     },
 
     // 姓名输入变化
@@ -209,11 +220,51 @@ Page({
         });
         // 记录用户同意状态（可选：保存到服务器）
         wx.setStorageSync(`agreed_terms_xx`, true);
-
-        // 跳转到支付页面，携带订单信息
-        // wx.navigateTo({
-        //     url: `/pages/payment/index?orderId=${this.data.tripInfo.orderId}`
-        // });
+    },
+    
+    async payImpl(total_price, order_id) {
+        return new Promise((resolve, reject) => {
+            try {
+                pay({
+                    order_id: order_id,
+                    total_price: total_price
+                }).then(paymentData => {
+                    console.log(paymentData)
+                    // 唤起微信支付组件，完成支付
+                    const that = this
+                    try {
+                        wx.requestPayment({
+                            timeStamp: paymentData?.timeStamp,
+                            nonceStr: paymentData?.nonceStr,
+                            package: paymentData?.package,
+                            paySign: paymentData?.paySign,
+                            signType: paymentData?.signType, // 该参数为固定值
+                            success (res) {
+                                updateOrderStatus({ order_id: order_id, order_status: ORDER_STATUS.PAID });
+                                that.toast('支付成功');
+                                resolve(res);
+                            },
+                            fail (err) {
+                                console.log(err)
+                                // closeOrder({
+                                //     order_id: order_id,
+                                //     nonce_str: paymentData?.nonceStr
+                                // })
+                                that.toast('用户取消支付');
+                                resolve(err);
+                            }
+                        });
+                    } catch (e) {
+                        this.toast('支付失败');
+                        reject(e);
+                    }
+                })
+            } catch (e) {
+                console.error(e);
+                this.toast('支付失败');
+                reject(e);
+            }
+        });
     },
 
     // 提交表单验证
@@ -284,23 +335,18 @@ Page({
                 person_count: this.data.personCount
             })
             wx.hideLoading();
+            this.toast('提交成功，跳转支付...');
             // 调用支付逻辑
-            wx.showToast({
-                title: "提交成功，跳转支付...",
-                icon: "success"
-            });
+            await this.payImpl(this.data.total_price, orderId);
 
             // 跳转至订单页面
             setTimeout(() => {
                 wx.navigateTo({
                     url: `/pages/order/order-detail/index?order_id=${orderId}`,
                 });
-            }, 1500);
+            }, 1000);
         } catch (e) {
-            wx.showToast({
-                title: '提交失败',
-                icon: 'none'
-            });
+            this.toast('提交失败');
         } finally {
             wx.hideLoading();
         }

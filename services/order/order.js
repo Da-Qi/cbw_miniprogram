@@ -89,9 +89,7 @@ export async function createOrder({
     await model()[ORDER_MODEL_KEY].create({
         data: {
             order_id: orderId,
-            route_id: {
-                _id: route.id,
-            },
+            route_id: route.id,
             customer_notes: remark,
             order_status: String(order_status),
             total_price: total_price,
@@ -248,11 +246,11 @@ export async function updateOrderDeliveryInfo({
  * @returns
  */
 export async function updateOrderStatus({
-    orderId,
+    order_id,
     order_status
 }) {
     if (cloudbaseTemplateConfig.useMock) {
-        ORDER.find(x => x._id === orderId).order_status = order_status
+        ORDER.find(x => x.order_id === order_id).order_status = order_status
         return;
     }
     return await model()[ORDER_MODEL_KEY].update({
@@ -262,7 +260,7 @@ export async function updateOrderStatus({
         filter: {
             where: {
                 order_id: {
-                    $eq: orderId,
+                    $eq: order_id,
                 },
             },
         },

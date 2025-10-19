@@ -95,19 +95,21 @@ Page({
   },
 
   async getOrderItems(order) {
-    const route_id = order.route_id;
-    try {
-      const route = await getRoute(route_id);
-      order.route = []
-      const orderImage =  await getSingleCloudImageTempUrl(route.swiper_images[0])
-      order.route.push({
-        image: orderImage,
-        name: route.name,
-        count: order.customer_id.length
-    })
-    } catch (e) {
-      this.errorToast('获取订单详情失败', e);
-    }
+      const route_id = order.route_id;
+      try {
+          const route = await getRoute(route_id);
+          const route_service = await getRouteService(order.service_ids[0]);
+          order.route = []
+          const orderImage = await getSingleCloudImageTempUrl(route.swiper_images[0])
+          order.route.push({
+              image: orderImage,
+              name: route.name,
+              count: order.ticket_count,
+              route_service: route_service
+          })
+      } catch (e) {
+          this.errorToast('获取订单详情失败', e);
+      }
   },
 
   async getOrderList(statusCode = ORDER_STATUS_ALL, reset = false) {
