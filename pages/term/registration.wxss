@@ -187,7 +187,6 @@
     align-items: center;
     margin-bottom: 20rpx;
     padding-bottom: 10rpx;
-    border-bottom: 1rpx solid #f0f0f0;
   }
   .form-index {
     font-size: 28rpx;
@@ -197,6 +196,7 @@
   .required-mark {
     font-size: 24rpx;
     color: #1677ff;
+    margin-right: 10px;
   }
   
   /* 表单项样式 */
@@ -263,4 +263,32 @@
     color: white;
     border-radius: 48rpx;
     margin: 40rpx 20rpx 20rpx;
+  }
+
+  .popup-style {
+    --td-popup-border-radius:15px;
+  }
+  .checkbox-group-style {
+  }
+
+  .user-scroll {
+    position: relative;
+    width: 360px;
+    height: 360px;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .close-btn {
+    position: absolute;
+    left: 50%;
+    margin-left: -160rpx;
+    bottom: calc(-1 * (48rpx + 64rpx));
+  }
+  .check-btn {
+    position: absolute;
+    left: 50%;
+    color: rgb(24, 231, 5);
+    margin-left: 100rpx;
+    bottom: calc(-1 * (48rpx + 64rpx));
   }

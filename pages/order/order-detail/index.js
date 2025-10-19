@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { orderListShouldFresh } from '../../../utils/orderListFresh';
 import { OrderStatus } from '../config';
 import { getOrder, orderStatusToName, ORDER_STATUS } from '../../../services/order/order';
-import { listCustomerInfo,getIdTypeText } from '../../../services/order/customerInfo';
+import { listCustomerInfo,getIdTypeText } from '../../../services/usercenter/customerInfo';
 import { fetchBusinessTime } from '../../../services/order/orderDetail';
 import { OPERATION_TYPE } from '../../../utils/orderOperation';
 

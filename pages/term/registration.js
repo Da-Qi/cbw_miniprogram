@@ -1,12 +1,14 @@
 import Toast from 'tdesign-miniprogram/toast/index';
+import dayjs from 'dayjs';
 import {
     createCustomers,
-    IdType
-} from '../../services/order/customerInfo'
+    IdType,
+    getCustomInfoCreatedByMyself
+} from '../../services/usercenter/customerInfo'
 import {
     createOrder,ORDER_STATUS, updateOrderStatus
 } from '../../services/order/order'
-import { pay,closeOrder } from '../../services/pay/pay';
+import { pay } from '../../services/pay/pay';
 Page({
     data: {
         // 行程信息（从上个页面传递过来）
@@ -37,7 +39,23 @@ Page({
             dogBirthday: "",
             locationId: null, // 选中的集合地点ID
         }],
-        remark: ''
+        remark: '',
+        currentUserInfoId: ['userinfo_1', 'userinfo_2'],
+        currentUserInfoToDisplay: [
+            {
+              label: '小美 : 130811192222',
+              value: 'userinfo_1',
+              content: '身份证：429004132309065536',
+              maxContentRow: 2,
+            },
+            {
+                label: '小帅: 130811192222',
+                value: 'userinfo_2',
+                content: '港澳通行证：1378244',
+                maxContentRow: 2,
+              },
+        ],
+        userInfoToImport:[]
     },
     toast(message) {
         Toast({
@@ -46,6 +64,12 @@ Page({
           message,
           duration: 1000,
           icon: '',
+        });
+    },
+
+    handleGroupChange(event) {
+        this.setData({
+            currentUserInfoId: event.detail.value,
         });
     },
 
@@ -134,6 +158,20 @@ Page({
         // 获取从订单页面传递的行程信息
         const ticketCount = JSON.parse(options.ticketCount);
         const personCount = JSON.parse(options.personCount);
+        getCustomInfoCreatedByMyself().then(userInfoToImportTemp => {
+            const currentUserInfoToDisplayTemp = userInfoToImportTemp.records.map(userinfo => {
+                return {
+                    label: `${userinfo.full_name}` + ':'+ `${userinfo.phone_number}`,
+                    value: userinfo._id,
+                    content: this.data.idTypes[userinfo.id_type].text + ':' + `${userinfo.id_number}`,
+                    maxContentRow: 2,
+                }
+            })
+            this.setData({
+                userInfoToImport: userInfoToImportTemp.records,
+                currentUserInfoToDisplay: currentUserInfoToDisplayTemp
+            })
+        });
         this.setData({
             ticketCount,
             personCount,
@@ -147,7 +185,7 @@ Page({
                 price: options.price,
                 id: options.routeServiceId
             },
-            total_price: Number(Math.round(options.price * ticketCount * 100) / 100).toFixed(2)
+            total_price: Number(Math.round(options.price * ticketCount * 100) / 100).toFixed(2),
         });
         // 根据购票数量更新报名人列表
         const initApplicantsList = () => {
@@ -164,7 +202,7 @@ Page({
                     idTypeIndex: 0,
                     idNumber: "",
                     showBirthday: false,
-                    birthday: '2000-01-01', //必须得赋值，不然不展示
+                    birthday: '', //必须得赋值，不然不展示
                     petInfo: "",
                     dogBirthday: "",
                     locationId: null,
@@ -321,8 +359,8 @@ Page({
         try {
             // 登记信息入库、订单信息入库
             // 用户输入的登记信息入库，方便下次填写
-            const applicantsData = await createCustomers(applicants);
-            const customerList = applicantsData.data.idList;
+            const customerList = await createCustomers(applicants, this.data.userInfoToImport);
+            console.log(customerList)
             const orderId = await createOrder({
                 customerList,
                 route: this.data.route,
@@ -350,5 +388,61 @@ Page({
         } finally {
             wx.hideLoading();
         }
-    }
+    },
+
+    handlePopup(e) {
+        this.setData({
+            visible: true
+        });
+    },
+
+    onVisibleChange(e) {
+        this.setData({
+            visible: e.detail.visible,
+        });
+    },
+    onClose() {
+        this.setData({
+            visible: false,
+        });
+    },
+
+      onCheck() {
+        this.setData({
+            visible: false,
+        });
+        // 用于导入后赋值
+        const newApplicants = [...this.data.applicants];
+        // 用于保存用户信息
+        const choosedUserInfo = [];
+        for (let i = 0; i < this.data.currentUserInfoId.length; i++) {
+            let userInfoId = this.data.currentUserInfoId[i]
+            for(let j = 0; i < this.data.userInfoToImport.length; j++) {
+                let userTemp = this.data.userInfoToImport[j]
+                if (userTemp._id === userInfoId) {
+                    choosedUserInfo.push(userTemp);
+                    break;
+                }
+            }
+        }
+        // 数量增加时，新增空白报名人
+        for (let i = 0; i < this.data.personCount && i < choosedUserInfo.length ; i++) {
+            let showBirthday = [1, 2, 3, 4, 5].includes(Number(choosedUserInfo[i].id_type))
+            newApplicants[i] = {
+                name: choosedUserInfo[i].full_name,
+                phone: choosedUserInfo[i].phone_number,
+                idTypeIndex: choosedUserInfo[i].id_type,
+                idNumber: choosedUserInfo[i].id_number,
+                showBirthday: showBirthday,
+                birthday: showBirthday? dayjs(choosedUserInfo[i].date_of_birth).format('YYYY-MM-DD') : null, //必须得赋值，不然不展示
+                petInfo: "",
+                dogBirthday: "",
+                locationId: null,
+                remark: ""
+            };
+        }
+        this.setData({
+            applicants: newApplicants
+        })
+      }
 });

@@ -1,5 +1,6 @@
 <!-- 条款页面 WXML -->
  <!-- 旅游信息展示区 -->
+
  <view class="terms-container" wx:if="{{!showTerm}}">
   <view class="trip-info">
     <view class="info-item">
@@ -22,14 +23,19 @@
 
   <!-- 报名人信息表单（动态生成） -->
   <view class="applicants-wrap">
-    <text class="form-title">报名人信息</text>
+    <view class="form-header">
+        <text class="form-title">报名人信息</text>
+        <t-button block t-class="required-mark" size="small" style="width: fit-content;height: fit-content;" variant="outline" theme="primary" bind:tap="handlePopup">
+                导入记录
+        </t-button>
+    </view>
+
     <view class="required-tip">* 为必填项</view>
 
     <!-- 循环渲染报名人表单 -->
     <view class="applicant-form" wx:for="{{applicants}}" wx:for-item="item" wx:for-index="index" wx:key="index">
       <view class="form-header">
         <text class="form-index">第 {{index + 1}} 位报名人</text>
-        <text class="required-mark">可导入(待实现)</text>
       </view>
 
       <!-- 姓名 -->
@@ -226,3 +232,10 @@
   </view>
 </view>
 <t-toast id="t-toast" />
+<t-popup visible="{{visible}}" t-class="popup-style" bind:visible-change="onVisibleChange" placement="center">
+  <scroll-view class="user-scroll" scroll-y>
+    <t-checkbox-group t-class="checkbox-group-style" value="{{currentUserInfoId}}" bind:change="handleGroupChange" options="{{currentUserInfoToDisplay}}" />
+  </scroll-view>
+  <t-icon t-class="close-btn" name="close-circle" size="64rpx" color="#fff" bind:tap="onClose" />
+  <t-icon t-class="check-btn" name="check-circle" size="64rpx" color="rgb(24, 231, 5)" bind:tap="onCheck" />
+</t-popup>
